@@ -13,6 +13,7 @@ import PricingPage from './pages/PricingPage';
 import FeaturesPage from './pages/FeaturesPage';
 import DocsPage from './pages/DocsPage';
 import AlkCoinPage from './pages/AlkCoinPage';
+import ArchitecturePage from './pages/ArchitecturePage';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/docs" element={<DocsPage />} />
             <Route path="/alk" element={<AlkCoinPage />} />
+            <Route path="/architecture" element={<ArchitecturePage />} />
           </Route>
         </Routes>
       </Router>

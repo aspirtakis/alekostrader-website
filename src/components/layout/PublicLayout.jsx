@@ -18,6 +18,7 @@ import { colors } from '../../theme/tradingTheme';
 
 const navItems = [
   { label: 'Features', path: '/features' },
+  { label: 'Architecture', path: '/architecture' },
   { label: 'Pricing', path: '/pricing' },
   { label: 'Documentation', path: '/docs' },
   { label: '$ALK', path: '/alk' },
