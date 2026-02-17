@@ -3,7 +3,7 @@
  * Displays information about the ALK token ecosystem
  */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -13,17 +13,15 @@ import {
   Grid,
   Paper,
   Stack,
-  Divider,
-  Link,
   Chip,
   IconButton,
+  CircularProgress,
 } from '@mui/material';
 import { alpha, keyframes } from '@mui/material/styles';
 import {
   Rocket as RocketIcon,
   ShowChart as ChartIcon,
   People as CommunityIcon,
-  Security as SecurityIcon,
   AccountBalanceWallet as WalletIcon,
   SwapHoriz as SwapIcon,
   TrendingUp as TrendingUpIcon,
@@ -36,6 +34,7 @@ import {
   LocalFireDepartment as FireIcon,
   Diamond as DiamondIcon,
   Layers as LayersIcon,
+  OpenInNew as OpenInNewIcon,
 } from '@mui/icons-material';
 import { colors } from '../theme/tradingTheme';
 
@@ -43,11 +42,6 @@ import { colors } from '../theme/tradingTheme';
 const float = keyframes`
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-15px); }
-`;
-
-const pulse = keyframes`
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.05); }
 `;
 
 const gradientShift = keyframes`
@@ -68,68 +62,161 @@ const solanaColors = {
   dark: '#1A1A2E',
 };
 
-// Token info
-const TOKEN_CONTRACT = 'ALK...coming soon';
+// Real Token info
+const TOKEN_CONTRACT = 'FD2imiDmjYDrh4A66JWKLvrrSLXvZh5Jep1Kx67Z6WXu';
+const RAYDIUM_SWAP_URL = 'https://raydium.io/swap/?inputMint=sol&outputMint=FD2imiDmjYDrh4A66JWKLvrrSLXvZh5Jep1Kx67Z6WXu';
+const JUPITER_SWAP_URL = 'https://jup.ag/swap/SOL-FD2imiDmjYDrh4A66JWKLvrrSLXvZh5Jep1Kx67Z6WXu';
+const RAYDIUM_POOL_URL = 'https://raydium.io/liquidity/increase/?mode=add&pool_id=EmNCv3QoGe4d2H7yPJeFDmgC7GfYrbbaE7sMeko1gxsA';
+const SOLSCAN_URL = 'https://solscan.io/token/FD2imiDmjYDrh4A66JWKLvrrSLXvZh5Jep1Kx67Z6WXu';
 
-// Tokenomics data
+// Tokenomics data (real)
 const tokenomics = [
-  { label: 'Total Supply', value: '1,000,000,000', sublabel: '1 Billion ALK' },
-  { label: 'Liquidity Pool', value: '40%', sublabel: '400M ALK locked' },
-  { label: 'Community', value: '30%', sublabel: 'Airdrops & Rewards' },
-  { label: 'Development', value: '20%', sublabel: 'Platform Growth' },
-  { label: 'Team', value: '10%', sublabel: '2-year vesting' },
+  { label: 'Total Supply', value: '1B', sublabel: 'Fixed cap, immutable' },
+  { label: 'Circulating', value: '939M', sublabel: 'Publicly tradeable' },
+  { label: 'Liquidity Locked', value: '61M', sublabel: 'SOL & USDC pools' },
+  { label: 'Mint Authority', value: 'Revoked', sublabel: 'Deflationary by design' },
+  { label: 'Decimals', value: '6', sublabel: 'Solana SPL Standard' },
 ];
 
 // Utility features
 const utilities = [
   {
     icon: BoltIcon,
-    title: 'Trading Fee Discounts',
-    description: 'Hold ALK for up to 50% off trading fees on AlekosTrader platform',
+    title: 'Fee Reduction Protocol',
+    description: 'Tiered discount structure: Hold ALK to reduce platform trading fees by up to 50% based on your holdings',
   },
   {
     icon: RocketIcon,
-    title: 'Premium Bot Access',
-    description: 'Stake ALK to unlock exclusive trading bot strategies and features',
+    title: 'Institutional Bot Access',
+    description: 'Stake ALK to unlock advanced algorithmic strategies, backtesting suites, and enterprise-grade automation',
   },
   {
     icon: CommunityIcon,
-    title: 'Governance Rights',
-    description: 'Vote on platform development, new features, and ecosystem proposals',
+    title: 'Protocol Governance',
+    description: 'Participate in on-chain governance: vote on development priorities, fee structures, and ecosystem allocations',
   },
   {
     icon: DiamondIcon,
-    title: 'Staking Rewards',
-    description: 'Earn passive income by staking ALK in our liquidity pools',
+    title: 'Yield Generation',
+    description: 'Provide liquidity to ALK/SOL and ALK/USDC pools to earn proportional trading fee distributions',
   },
   {
     icon: FireIcon,
-    title: 'Deflationary Burns',
-    description: '1% of all trading fees used to buy back and burn ALK tokens',
+    title: 'Deflationary Mechanism',
+    description: 'Automated buyback: 1% of platform revenue allocated to token burns, systematically reducing supply',
   },
   {
     icon: LayersIcon,
-    title: 'Tier Benefits',
-    description: 'Higher ALK holdings unlock premium support and features',
+    title: 'Membership Tiers',
+    description: 'Progressive benefits: Larger positions unlock priority support, early feature access, and reduced withdrawal fees',
   },
 ];
 
 // Roadmap items
 const roadmap = [
-  { quarter: 'Q1 2024', items: ['Token Launch on Raydium', 'Initial Liquidity Lock', 'Community Airdrop'], completed: true },
-  { quarter: 'Q2 2024', items: ['CEX Listings', 'Staking Platform Launch', 'Governance Portal'], completed: true },
-  { quarter: 'Q3 2024', items: ['Fee Discount Integration', 'Mobile App Launch', 'Partnership Announcements'], completed: false },
-  { quarter: 'Q4 2024', items: ['Cross-chain Bridge', 'NFT Integration', 'DAO Launch'], completed: false },
+  { quarter: 'Q1 2026', items: ['DEX Launch via Raydium AMM', 'Dual-pool Liquidity Provision', 'Token Verification & Audit'], completed: true },
+  { quarter: 'Q2 2026', items: ['Phantom Wallet Integration', 'Platform Fee Discount System', 'Strategic Holder Airdrop'], completed: false },
+  { quarter: 'Q3 2026', items: ['Tier-1 CEX Listing Applications', 'Non-custodial Staking Launch', 'Governance Module Deployment'], completed: false },
+  { quarter: 'Q4 2026', items: ['Wormhole Bridge Integration', 'NFT Membership Passes', 'Full DAO Transition'], completed: false },
 ];
 
 // Hero Section
 const HeroSection = () => {
-  const [copied, setCopied] = React.useState(false);
+  const [copied, setCopied] = useState(false);
+  const [walletConnected, setWalletConnected] = useState(false);
+  const [walletAddress, setWalletAddress] = useState('');
+  const [alkBalance, setAlkBalance] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(TOKEN_CONTRACT);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const connectWallet = async () => {
+    try {
+      if (window.solana && window.solana.isPhantom) {
+        setLoading(true);
+        const response = await window.solana.connect();
+        setWalletAddress(response.publicKey.toString());
+        setWalletConnected(true);
+        await fetchAlkBalance(response.publicKey.toString());
+      } else {
+        window.open('https://phantom.app/', '_blank');
+      }
+    } catch (error) {
+      console.error('Wallet connection error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const disconnectWallet = async () => {
+    try {
+      if (window.solana) {
+        await window.solana.disconnect();
+        setWalletConnected(false);
+        setWalletAddress('');
+        setAlkBalance(null);
+      }
+    } catch (error) {
+      console.error('Disconnect error:', error);
+    }
+  };
+
+  const fetchAlkBalance = async (address) => {
+    try {
+      const response = await fetch('https://api.mainnet-beta.solana.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          id: 1,
+          method: 'getTokenAccountsByOwner',
+          params: [
+            address,
+            { mint: TOKEN_CONTRACT },
+            { encoding: 'jsonParsed' },
+          ],
+        }),
+      });
+      const data = await response.json();
+      if (data.result?.value?.[0]) {
+        const balance = data.result.value[0].account.data.parsed.info.tokenAmount.uiAmount;
+        setAlkBalance(balance);
+      } else {
+        setAlkBalance(0);
+      }
+    } catch (error) {
+      console.error('Balance fetch error:', error);
+      setAlkBalance(0);
+    }
+  };
+
+  // Check if wallet is already connected
+  useEffect(() => {
+    const checkConnection = async () => {
+      if (window.solana && window.solana.isPhantom && window.solana.isConnected) {
+        try {
+          const response = await window.solana.connect({ onlyIfTrusted: true });
+          setWalletAddress(response.publicKey.toString());
+          setWalletConnected(true);
+          await fetchAlkBalance(response.publicKey.toString());
+        } catch (error) {
+          // Not connected or user hasn't trusted the site
+        }
+      }
+    };
+    checkConnection();
+  }, []);
+
+  const formatBalance = (balance) => {
+    if (balance === null) return '...';
+    if (balance >= 1e9) return (balance / 1e9).toFixed(2) + 'B';
+    if (balance >= 1e6) return (balance / 1e6).toFixed(2) + 'M';
+    if (balance >= 1e3) return (balance / 1e3).toFixed(2) + 'K';
+    return balance.toFixed(2);
   };
 
   return (
@@ -179,12 +266,12 @@ const HeroSection = () => {
               {/* Solana Badge */}
               <Chip
                 icon={<BoltIcon sx={{ color: solanaColors.green }} />}
-                label="Powered by Solana"
+                label="Live on Solana"
                 sx={{
                   mb: 3,
-                  bgcolor: alpha(solanaColors.purple, 0.2),
-                  border: `1px solid ${alpha(solanaColors.purple, 0.5)}`,
-                  color: solanaColors.purple,
+                  bgcolor: alpha(solanaColors.green, 0.2),
+                  border: `1px solid ${alpha(solanaColors.green, 0.5)}`,
+                  color: solanaColors.green,
                   fontWeight: 600,
                   '& .MuiChip-icon': { ml: 1 },
                 }}
@@ -204,7 +291,7 @@ const HeroSection = () => {
                   WebkitTextFillColor: 'transparent',
                 }}
               >
-                $ALK
+                ALK
               </Typography>
 
               <Typography
@@ -215,7 +302,7 @@ const HeroSection = () => {
                   mb: 2,
                 }}
               >
-                The AlekosTrader Ecosystem Token
+                The Native Utility Token of AlekosTrader
               </Typography>
 
               <Typography
@@ -228,7 +315,7 @@ const HeroSection = () => {
                   maxWidth: 500,
                 }}
               >
-                Unlock premium features, earn staking rewards, and govern the future of decentralized trading.
+                Access institutional-grade trading tools, reduce platform fees, and participate in protocol governance. Built on Solana for sub-second finality.
               </Typography>
 
               {/* Contract Address */}
@@ -251,6 +338,8 @@ const HeroSection = () => {
                       fontFamily: 'monospace',
                       color: solanaColors.green,
                       flex: 1,
+                      fontSize: { xs: '0.7rem', md: '0.875rem' },
+                      wordBreak: 'break-all',
                     }}
                   >
                     {TOKEN_CONTRACT}
@@ -261,12 +350,70 @@ const HeroSection = () => {
                 </Stack>
               </Paper>
 
+              {/* Wallet Connection */}
+              {walletConnected ? (
+                <Paper
+                  sx={{
+                    p: 2,
+                    mb: 4,
+                    bgcolor: alpha(solanaColors.green, 0.1),
+                    border: `1px solid ${alpha(solanaColors.green, 0.3)}`,
+                    borderRadius: 2,
+                  }}
+                >
+                  <Stack direction="row" justifyContent="space-between" alignItems="center">
+                    <Box>
+                      <Typography variant="caption" sx={{ color: colors.text.secondary }}>
+                        Your ALK Balance
+                      </Typography>
+                      <Typography variant="h5" sx={{ fontWeight: 700, color: solanaColors.green }}>
+                        {formatBalance(alkBalance)} ALK
+                      </Typography>
+                      <Typography variant="caption" sx={{ color: colors.text.secondary, fontFamily: 'monospace' }}>
+                        {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
+                      </Typography>
+                    </Box>
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      onClick={disconnectWallet}
+                      sx={{ borderColor: solanaColors.green, color: solanaColors.green }}
+                    >
+                      Disconnect
+                    </Button>
+                  </Stack>
+                </Paper>
+              ) : (
+                <Button
+                  variant="outlined"
+                  size="large"
+                  startIcon={loading ? <CircularProgress size={20} /> : <WalletIcon />}
+                  onClick={connectWallet}
+                  disabled={loading}
+                  sx={{
+                    mb: 4,
+                    py: 1.5,
+                    px: 4,
+                    fontWeight: 600,
+                    borderColor: alpha(solanaColors.purple, 0.5),
+                    color: solanaColors.purple,
+                    '&:hover': {
+                      borderColor: solanaColors.purple,
+                      bgcolor: alpha(solanaColors.purple, 0.1),
+                    },
+                  }}
+                >
+                  {loading ? 'Connecting...' : 'Connect Phantom Wallet'}
+                </Button>
+              )}
+
               {/* CTA Buttons */}
               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                 <Button
                   variant="contained"
                   size="large"
                   startIcon={<SwapIcon />}
+                  onClick={() => window.open(RAYDIUM_SWAP_URL, '_blank')}
                   sx={{
                     py: 1.5,
                     px: 4,
@@ -288,6 +435,7 @@ const HeroSection = () => {
                   variant="outlined"
                   size="large"
                   startIcon={<ChartIcon />}
+                  onClick={() => window.open(SOLSCAN_URL, '_blank')}
                   sx={{
                     py: 1.5,
                     px: 4,
@@ -303,7 +451,29 @@ const HeroSection = () => {
                     transition: 'all 0.3s ease',
                   }}
                 >
-                  View Chart
+                  View on Solscan
+                </Button>
+              </Stack>
+
+              {/* Additional Links */}
+              <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+                <Button
+                  variant="text"
+                  size="small"
+                  startIcon={<OpenInNewIcon />}
+                  onClick={() => window.open(JUPITER_SWAP_URL, '_blank')}
+                  sx={{ color: colors.text.secondary }}
+                >
+                  Jupiter
+                </Button>
+                <Button
+                  variant="text"
+                  size="small"
+                  startIcon={<OpenInNewIcon />}
+                  onClick={() => window.open(RAYDIUM_POOL_URL, '_blank')}
+                  sx={{ color: colors.text.secondary }}
+                >
+                  Liquidity Pool
                 </Button>
               </Stack>
 
@@ -358,20 +528,18 @@ const HeroSection = () => {
                   animation: `${glow} 3s ease-in-out infinite`,
                   border: `3px solid ${alpha(solanaColors.purple, 0.5)}`,
                   position: 'relative',
+                  overflow: 'hidden',
                 }}
               >
-                <Typography
-                  sx={{
-                    fontSize: '6rem',
-                    fontWeight: 900,
-                    background: `linear-gradient(135deg, ${solanaColors.purple} 0%, ${solanaColors.green} 100%)`,
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    letterSpacing: '-0.05em',
+                <img
+                  src="/alk-token.png"
+                  alt="ALK Token"
+                  style={{
+                    width: '80%',
+                    height: '80%',
+                    objectFit: 'contain',
                   }}
-                >
-                  ALK
-                </Typography>
+                />
                 {/* Orbiting particles */}
                 <Box
                   sx={{
@@ -440,7 +608,10 @@ const TokenomicsSection = () => {
               mb: 2,
             }}
           >
-            Fair & Transparent Distribution
+            Transparent Token Economics
+          </Typography>
+          <Typography variant="body1" sx={{ color: colors.text.secondary }}>
+            Mint authority permanently revoked. Verifiable on-chain. No additional tokens can ever be created.
           </Typography>
         </Box>
 
@@ -465,6 +636,7 @@ const TokenomicsSection = () => {
                   variant="h3"
                   sx={{
                     fontWeight: 700,
+                    fontSize: { xs: '1.5rem', md: '2rem' },
                     background: `linear-gradient(135deg, ${solanaColors.purple} 0%, ${solanaColors.green} 100%)`,
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
@@ -519,7 +691,7 @@ const UtilitySection = () => {
               mb: 2,
             }}
           >
-            Real Value, Real Utility
+            Integrated Platform Utility
           </Typography>
           <Typography
             variant="body1"
@@ -529,7 +701,7 @@ const UtilitySection = () => {
               mx: 'auto',
             }}
           >
-            ALK isn't just another token - it's the backbone of the AlekosTrader ecosystem
+            ALK serves as the economic layer connecting fee structures, access tiers, and governance across the AlekosTrader platform
           </Typography>
         </Box>
 
@@ -612,7 +784,7 @@ const RoadmapSection = () => {
               mb: 2,
             }}
           >
-            Our Journey Ahead
+            Development Roadmap
           </Typography>
         </Box>
 
@@ -707,7 +879,7 @@ const CTASection = () => {
               mb: 3,
             }}
           >
-            Ready to Join the ALK Community?
+            Begin Your Position in ALK
           </Typography>
           <Typography
             variant="body1"
@@ -718,13 +890,13 @@ const CTASection = () => {
               mx: 'auto',
             }}
           >
-            Start trading on AlekosTrader and earn ALK rewards for your activity
+            Acquire ALK on Raydium to unlock platform benefits, participate in governance, and join the AlekosTrader ecosystem
           </Typography>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
             <Button
               variant="contained"
               size="large"
-              onClick={() => navigate('/pricing')}
+              onClick={() => window.open(RAYDIUM_SWAP_URL, '_blank')}
               sx={{
                 py: 1.5,
                 px: 4,
@@ -735,7 +907,7 @@ const CTASection = () => {
                 },
               }}
             >
-              Start Trading
+              Buy ALK Now
             </Button>
             <Button
               variant="outlined"

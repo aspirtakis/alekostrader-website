@@ -54,33 +54,33 @@ const gradientShift = keyframes`
 const features = [
   {
     icon: ExchangeIcon,
-    title: 'Multi-Exchange Support',
-    description: 'Connect to Coinbase, Bitvavo, Binance, KuCoin and more. You choose where to trade.',
+    title: '4 Major Exchanges',
+    description: 'Unified access to Coinbase, Bitvavo, Binance, and KuCoin. Execute across markets from a single dashboard.',
   },
   {
     icon: BotIcon,
-    title: 'Execute Your Strategies',
-    description: 'Deploy up to 5 bots running YOUR strategies - DCA, Grid, or custom rules you define.',
+    title: '5 Automated Bots',
+    description: 'DCA, Grid, Closer, Bumper, and Strateger bots. Each designed for specific market conditions and strategies.',
   },
   {
     icon: BuildIcon,
-    title: 'Professional Trading Tool',
-    description: 'Like a precision screwdriver for traders. You set the parameters, the tool executes.',
+    title: 'Institutional-Grade Execution',
+    description: 'Sub-second order execution with real-time position tracking. Built for traders who demand precision.',
   },
   {
     icon: AnalyticsIcon,
-    title: 'Portfolio Analytics',
-    description: 'Track your decisions with real-time P&L, performance metrics, and allocation views.',
+    title: 'Real-Time P&L Analytics',
+    description: 'Live portfolio tracking across all positions. Monitor unrealized gains, drawdowns, and performance metrics.',
   },
   {
     icon: SecurityIcon,
-    title: 'Your Keys, Your Control',
-    description: 'Self-hosted on your hardware. Your API keys, your strategies, your responsibility.',
+    title: 'Self-Hosted Infrastructure',
+    description: 'Deploy on your hardware. AES-256 encrypted API storage. Zero third-party access to your credentials.',
   },
   {
     icon: AlertIcon,
-    title: 'Real-time Monitoring',
-    description: 'Get notified when your conditions are met. You decide what matters.',
+    title: 'Smart Alert System',
+    description: 'Custom price alerts, position triggers, and bot notifications. Stay informed without watching charts.',
   },
 ];
 
@@ -210,7 +210,7 @@ const HeroSection = () => {
                   display: 'block',
                 }}
               >
-                PROFESSIONAL TRADING TOOL
+                MULTI-EXCHANGE TRADING AUTOMATION
               </Typography>
               <Typography
                 variant="h1"
@@ -226,7 +226,7 @@ const HeroSection = () => {
                   WebkitTextFillColor: 'transparent',
                 }}
               >
-                Your Strategies. Your Decisions. Your Control.
+                Trade Smarter. Execute Faster. Scale Bigger.
               </Typography>
               <Typography
                 variant="h5"
@@ -238,8 +238,8 @@ const HeroSection = () => {
                   maxWidth: 550,
                 }}
               >
-                A professional trading tool for experienced traders. Define your own strategies,
-                backtest with realistic simulation, then execute manually or automated.
+                5 automated bots. 4 major exchanges. One unified platform.
+                Deploy institutional-grade trading strategies from your own infrastructure.
               </Typography>
               <Typography
                 variant="body2"
@@ -278,7 +278,7 @@ const HeroSection = () => {
                     transition: 'all 0.3s ease',
                   }}
                 >
-                  Get AlekosTrader
+                  Start Trading Now
                 </Button>
                 <Button
                   variant="outlined"
@@ -299,8 +299,43 @@ const HeroSection = () => {
                     transition: 'all 0.3s ease',
                   }}
                 >
-                  View Features
+                  Explore Platform
                 </Button>
+              </Stack>
+              {/* Stats bar */}
+              <Stack
+                direction="row"
+                spacing={4}
+                sx={{
+                  mt: 4,
+                  pt: 3,
+                  borderTop: `1px solid ${alpha(colors.border.default, 0.3)}`,
+                }}
+              >
+                <Box>
+                  <Typography variant="h4" sx={{ fontWeight: 700, color: colors.accent.primary }}>
+                    5
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: colors.text.muted, textTransform: 'uppercase', letterSpacing: 1 }}>
+                    Trading Bots
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography variant="h4" sx={{ fontWeight: 700, color: colors.accent.primary }}>
+                    4
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: colors.text.muted, textTransform: 'uppercase', letterSpacing: 1 }}>
+                    Exchanges
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography variant="h4" sx={{ fontWeight: 700, color: colors.accent.primary }}>
+                    24/7
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: colors.text.muted, textTransform: 'uppercase', letterSpacing: 1 }}>
+                    Automation
+                  </Typography>
+                </Box>
               </Stack>
             </Box>
           </Grid>
@@ -369,7 +404,7 @@ const FeaturesSection = () => {
               mb: 2,
             }}
           >
-            Professional Tools for Serious Traders
+            Built for Professional Traders
           </Typography>
           <Typography
             variant="body1"
@@ -379,9 +414,9 @@ const FeaturesSection = () => {
               mx: 'auto',
             }}
           >
-            AlekosTrader is like a high-quality screwdriver - it helps you execute YOUR strategies
-            with precision. You define the rules, set the parameters, and take responsibility for
-            your trading decisions. Test with our realistic backtesting before going live.
+            From DCA accumulation to grid trading and momentum strategies, AlekosTrader provides
+            the automation infrastructure you need. Deploy your edge across multiple exchanges
+            with institutional-grade execution and full position control.
           </Typography>
         </Box>
 

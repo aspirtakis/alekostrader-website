@@ -11,8 +11,9 @@ import {
   ListItemIcon,
   ListItemText,
   Chip,
-  alpha,
+  Stack,
 } from '@mui/material';
+import { alpha, keyframes } from '@mui/material/styles';
 import {
   AccountBalance as ExchangeIcon,
   SmartToy as BotIcon,
@@ -38,78 +39,122 @@ import {
 } from '@mui/icons-material';
 import { colors } from '../theme/tradingTheme';
 
+// Animations
+const float = keyframes`
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+`;
+
+// Exchange logo components (styled text logos)
+const ExchangeLogo = ({ name, color }) => (
+  <Box
+    sx={{
+      px: 3,
+      py: 1.5,
+      borderRadius: 2,
+      bgcolor: alpha(color, 0.1),
+      border: `1px solid ${alpha(color, 0.3)}`,
+      transition: 'all 0.3s ease',
+      animation: `${float} 4s ease-in-out infinite`,
+      '&:hover': {
+        bgcolor: alpha(color, 0.15),
+        borderColor: color,
+        transform: 'scale(1.05)',
+      },
+    }}
+  >
+    <Typography
+      sx={{
+        fontWeight: 700,
+        fontSize: '1.1rem',
+        color: color,
+        letterSpacing: name === 'BINANCE' ? 2 : 1,
+      }}
+    >
+      {name}
+    </Typography>
+  </Box>
+);
+
+const exchanges = [
+  { name: 'COINBASE', color: '#0052FF' },
+  { name: 'BINANCE', color: '#F0B90B' },
+  { name: 'BITVAVO', color: '#0066FF' },
+  { name: 'KUCOIN', color: '#23AF91' },
+];
+
 // Feature section data
 const featureSections = [
   {
     id: 'exchanges',
     icon: ExchangeIcon,
-    title: 'Multi-Exchange Support',
-    description: 'Connect and trade across multiple cryptocurrency exchanges from a single unified interface. Manage all your trading accounts in one place.',
+    title: 'Multi-Exchange Infrastructure',
+    description: 'Unified API layer connecting you to 4 major exchanges. Execute trades, manage positions, and monitor balances from a single command center.',
     color: colors.accent.primary,
     benefits: [
-      { icon: CheckIcon, text: 'Coinbase Advanced Trade integration' },
-      { icon: CheckIcon, text: 'Bitvavo exchange support' },
-      { icon: CheckIcon, text: 'Binance connectivity' },
-      { icon: CheckIcon, text: 'KuCoin trading access' },
-      { icon: SecurityIcon, text: 'Unified interface for all exchanges' },
-      { icon: SecurityIcon, text: 'AES-256 encrypted API key storage' },
+      { icon: CheckIcon, text: 'Coinbase Advanced Trade - Full order book access' },
+      { icon: CheckIcon, text: 'Bitvavo - European market connectivity' },
+      { icon: CheckIcon, text: 'Binance - Global liquidity and pairs' },
+      { icon: CheckIcon, text: 'KuCoin - Altcoin and emerging market access' },
+      { icon: SecurityIcon, text: 'Cross-exchange position aggregation' },
+      { icon: SecurityIcon, text: 'AES-256 encrypted credential vault' },
     ],
   },
   {
     id: 'bots',
     icon: BotIcon,
-    title: 'Trading Bots',
-    description: 'Automate your trading strategies with our suite of powerful trading bots. From simple DCA to advanced momentum detection.',
+    title: '5 Specialized Trading Bots',
+    description: 'Each bot engineered for specific market conditions. From systematic accumulation to volatility capture and trend following.',
     color: colors.trading.buy,
     benefits: [
-      { icon: DcaIcon, text: 'DCA Bot - Dollar Cost Averaging with customizable intervals' },
-      { icon: GridIcon, text: 'Grid Bot - Profit from market volatility with grid trading' },
-      { icon: CloseIcon, text: 'Closer Bot - Automated take-profit and position closing' },
-      { icon: BumperIcon, text: 'Bumper Bot - Momentum detection and trend following' },
-      { icon: StrategyIcon, text: 'Strateger Bot - Rule-based trading with custom conditions' },
+      { icon: DcaIcon, text: 'DCA Bot - Systematic accumulation with custom intervals and sizing' },
+      { icon: GridIcon, text: 'Grid Bot - Capture profits from range-bound volatility' },
+      { icon: CloseIcon, text: 'Closer Bot - Automated take-profit and trailing stop execution' },
+      { icon: BumperIcon, text: 'Bumper Bot - Momentum detection with dynamic entry/exit' },
+      { icon: StrategyIcon, text: 'Strateger Bot - Custom rule engine with multi-indicator logic' },
     ],
   },
   {
     id: 'analysis',
     icon: AnalysisIcon,
-    title: 'Technical Analysis',
-    description: 'Access professional-grade technical analysis tools with over 15 indicators. Get real-time signals and set custom alerts for market movements.',
+    title: 'Professional Technical Analysis',
+    description: '15+ technical indicators with real-time signal generation. Multi-timeframe analysis for comprehensive market insight.',
     color: colors.accent.secondary,
     benefits: [
-      { icon: TimelineIcon, text: 'RSI, MACD, Bollinger Bands, Stochastic' },
-      { icon: TimelineIcon, text: 'Moving Averages (SMA, EMA, WMA)' },
-      { icon: TimelineIcon, text: 'Volume indicators and oscillators' },
-      { icon: SpeedIcon, text: 'Real-time signal generation' },
-      { icon: AlertIcon, text: 'Custom price and indicator alerts' },
-      { icon: AssessmentIcon, text: 'Multi-timeframe analysis' },
+      { icon: TimelineIcon, text: 'RSI, MACD, Bollinger Bands, Stochastic oscillator' },
+      { icon: TimelineIcon, text: 'Moving Averages - SMA, EMA, WMA configurations' },
+      { icon: TimelineIcon, text: 'Volume profile and order flow indicators' },
+      { icon: SpeedIcon, text: 'Real-time signal generation engine' },
+      { icon: AlertIcon, text: 'Price alerts and indicator-based triggers' },
+      { icon: AssessmentIcon, text: 'Multi-timeframe confluence analysis' },
     ],
   },
   {
     id: 'portfolio',
     icon: PortfolioIcon,
-    title: 'Portfolio Management',
-    description: 'Track your portfolio performance in real-time. Monitor positions, analyze P/L, and review your complete trade history.',
+    title: 'Real-Time Portfolio Analytics',
+    description: 'Live P&L tracking across all exchanges and positions. Monitor performance, drawdowns, and allocation with institutional-grade metrics.',
     color: colors.accent.warning,
     benefits: [
-      { icon: TrendingIcon, text: 'Real-time P/L tracking across all positions' },
-      { icon: VisibilityIcon, text: 'Position monitoring with live updates' },
-      { icon: HistoryIcon, text: 'Complete trade history and analytics' },
-      { icon: AssessmentIcon, text: 'Performance metrics and statistics' },
-      { icon: CheckIcon, text: 'Multi-exchange portfolio aggregation' },
+      { icon: TrendingIcon, text: 'Real-time unrealized and realized P&L calculation' },
+      { icon: VisibilityIcon, text: 'Live position monitoring with entry/exit tracking' },
+      { icon: HistoryIcon, text: 'Complete trade journal with execution details' },
+      { icon: AssessmentIcon, text: 'Sharpe ratio, win rate, and risk metrics' },
+      { icon: CheckIcon, text: 'Cross-exchange portfolio consolidation' },
     ],
   },
   {
     id: 'builder',
     icon: BuilderIcon,
-    title: 'Strategy Builder',
-    description: 'Create custom trading strategies with our visual rule builder. Backtest your strategies and practice with paper trading before going live.',
+    title: 'Strategy Builder and Backtesting',
+    description: 'Visual strategy constructor with historical backtesting. Validate your edge before deploying capital with paper trading.',
     color: colors.accent.info,
     benefits: [
-      { icon: BuilderIcon, text: 'Visual drag-and-drop rule builder' },
-      { icon: ScienceIcon, text: 'Historical backtesting engine' },
-      { icon: PlayIcon, text: 'Paper trading mode for risk-free testing' },
-      { icon: StrategyIcon, text: 'Combine multiple indicators and conditions' },
-      { icon: CheckIcon, text: 'Save and share strategy templates' },
+      { icon: BuilderIcon, text: 'Visual rule builder with drag-and-drop logic' },
+      { icon: ScienceIcon, text: 'Historical backtesting with realistic fills and fees' },
+      { icon: PlayIcon, text: 'Paper trading mode for live market testing' },
+      { icon: StrategyIcon, text: 'Multi-indicator condition combinations' },
+      { icon: CheckIcon, text: 'Strategy templates and version control' },
     ],
   },
 ];
@@ -194,53 +239,118 @@ const FeatureCard = ({ feature }) => {
 const FeaturesPage = () => {
   return (
     <Box sx={{ minHeight: '100vh', pb: 8 }}>
-      {/* Hero Section */}
+      {/* Hero Section with Exchange Logos */}
       <Box
         sx={{
           py: 8,
-          textAlign: 'center',
-          background: `linear-gradient(180deg, ${alpha(colors.accent.primary, 0.1)} 0%, transparent 100%)`,
+          background: `radial-gradient(ellipse at top right, ${alpha(colors.accent.primary, 0.15)} 0%, transparent 50%),
+                       radial-gradient(ellipse at bottom left, ${alpha(colors.accent.secondary, 0.1)} 0%, transparent 50%),
+                       ${colors.background.primary}`,
+          borderBottom: `1px solid ${colors.border.default}`,
         }}
       >
-        <Container maxWidth="md">
-          <Typography
-            variant="h2"
-            fontWeight={700}
-            sx={{ mb: 2, color: 'text.primary' }}
-          >
-            Powerful Trading Tools
-          </Typography>
-          <Typography
-            variant="h6"
-            color="text.secondary"
-            sx={{ mb: 4, maxWidth: 600, mx: 'auto', lineHeight: 1.6 }}
-          >
-            Everything you need to trade cryptocurrency professionally. Multi-exchange support,
-            automated bots, technical analysis, and portfolio management in one platform.
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Chip
-              label="Multi-Exchange"
-              sx={{ bgcolor: alpha(colors.accent.primary, 0.15), color: colors.accent.primary }}
-            />
-            <Chip
-              label="5 Trading Bots"
-              sx={{ bgcolor: alpha(colors.trading.buy, 0.15), color: colors.trading.buy }}
-            />
-            <Chip
-              label="15+ Indicators"
-              sx={{ bgcolor: alpha(colors.accent.secondary, 0.15), color: colors.accent.secondary }}
-            />
-            <Chip
-              label="Real-time Analytics"
-              sx={{ bgcolor: alpha(colors.accent.warning, 0.15), color: colors.accent.warning }}
-            />
+        <Container maxWidth="lg">
+          <Box sx={{ textAlign: 'center', mb: 6 }}>
+            <Typography
+              variant="overline"
+              sx={{
+                color: colors.accent.primary,
+                fontWeight: 600,
+                letterSpacing: 2,
+                mb: 2,
+                display: 'block',
+              }}
+            >
+              PLATFORM CAPABILITIES
+            </Typography>
+            <Typography
+              variant="h2"
+              sx={{
+                fontSize: { xs: '2rem', md: '3rem' },
+                fontWeight: 800,
+                mb: 2,
+                background: `linear-gradient(135deg, ${colors.text.primary} 0%, ${colors.accent.primary} 100%)`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              One Platform. Four Exchanges. Unlimited Potential.
+            </Typography>
+            <Typography
+              variant="h6"
+              sx={{
+                color: colors.text.secondary,
+                maxWidth: 700,
+                mx: 'auto',
+                mb: 5,
+                fontWeight: 400,
+              }}
+            >
+              Execute across Coinbase, Binance, Bitvavo, and KuCoin with unified position management,
+              automated bots, and real-time analytics.
+            </Typography>
+
+            {/* Exchange Logos */}
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={3}
+              justifyContent="center"
+              alignItems="center"
+              sx={{ mb: 4 }}
+            >
+              {exchanges.map((exchange, index) => (
+                <Box
+                  key={exchange.name}
+                  sx={{
+                    animationDelay: `${index * 0.5}s`,
+                  }}
+                >
+                  <ExchangeLogo name={exchange.name} color={exchange.color} />
+                </Box>
+              ))}
+            </Stack>
+
+            {/* Stats */}
+            <Stack
+              direction="row"
+              spacing={6}
+              justifyContent="center"
+              sx={{
+                pt: 4,
+                borderTop: `1px solid ${alpha(colors.border.default, 0.3)}`,
+              }}
+            >
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography variant="h3" sx={{ fontWeight: 700, color: colors.accent.primary }}>
+                  5
+                </Typography>
+                <Typography variant="body2" sx={{ color: colors.text.muted, textTransform: 'uppercase', letterSpacing: 1 }}>
+                  Trading Bots
+                </Typography>
+              </Box>
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography variant="h3" sx={{ fontWeight: 700, color: colors.accent.primary }}>
+                  15+
+                </Typography>
+                <Typography variant="body2" sx={{ color: colors.text.muted, textTransform: 'uppercase', letterSpacing: 1 }}>
+                  Indicators
+                </Typography>
+              </Box>
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography variant="h3" sx={{ fontWeight: 700, color: colors.accent.primary }}>
+                  24/7
+                </Typography>
+                <Typography variant="body2" sx={{ color: colors.text.muted, textTransform: 'uppercase', letterSpacing: 1 }}>
+                  Automation
+                </Typography>
+              </Box>
+            </Stack>
           </Box>
         </Container>
       </Box>
 
       {/* Features Grid */}
-      <Container maxWidth="lg" sx={{ mt: 4 }}>
+      <Container maxWidth="lg" sx={{ mt: 6, pt: 4 }}>
         <Grid container spacing={4}>
           {featureSections.map((feature) => (
             <Grid item xs={12} md={6} key={feature.id}>
@@ -251,42 +361,52 @@ const FeaturesPage = () => {
       </Container>
 
       {/* Bottom CTA Section */}
-      <Box sx={{ mt: 8, py: 6, textAlign: 'center' }}>
+      <Box
+        sx={{
+          mt: 8,
+          py: 8,
+          textAlign: 'center',
+          bgcolor: alpha(colors.accent.primary, 0.05),
+          borderTop: `1px solid ${colors.border.default}`,
+        }}
+      >
         <Container maxWidth="md">
-          <Typography variant="h4" fontWeight={600} sx={{ mb: 2 }}>
-            Ready to Start Trading?
+          <Typography variant="h4" fontWeight={700} sx={{ mb: 2 }}>
+            Deploy Your Trading Edge
           </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-            Connect your exchange, configure your bots, and let automation work for you.
+          <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 600, mx: 'auto' }}>
+            Self-hosted infrastructure. Your API keys stay on your hardware.
+            Full control over your trading automation.
           </Typography>
-          <Box
-            sx={{
-              display: 'flex',
-              gap: 2,
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-            }}
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={2}
+            justifyContent="center"
+            alignItems="center"
+            sx={{ mb: 4 }}
           >
             <Chip
               icon={<SecurityIcon />}
-              label="Secure API Storage"
+              label="AES-256 Encryption"
               variant="outlined"
-              sx={{ borderColor: colors.trading.buy, color: colors.trading.buy }}
+              sx={{ borderColor: colors.trading.buy, color: colors.trading.buy, py: 2.5 }}
             />
             <Chip
               icon={<SpeedIcon />}
-              label="Low Latency Execution"
+              label="Sub-Second Execution"
               variant="outlined"
-              sx={{ borderColor: colors.accent.primary, color: colors.accent.primary }}
+              sx={{ borderColor: colors.accent.primary, color: colors.accent.primary, py: 2.5 }}
             />
             <Chip
               icon={<TrendingIcon />}
-              label="24/7 Bot Trading"
+              label="24/7 Automated Trading"
               variant="outlined"
-              sx={{ borderColor: colors.accent.secondary, color: colors.accent.secondary }}
+              sx={{ borderColor: colors.accent.secondary, color: colors.accent.secondary, py: 2.5 }}
             />
-          </Box>
+          </Stack>
+          <Typography variant="body2" sx={{ color: colors.text.muted, fontStyle: 'italic' }}>
+            Powered by the ALK token ecosystem
+          </Typography>
         </Container>
       </Box>
     </Box>

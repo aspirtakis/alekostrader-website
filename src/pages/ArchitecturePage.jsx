@@ -108,71 +108,71 @@ const ripple = keyframes`
 // Architecture layers
 const architectureLayers = [
   {
-    title: 'Your Device',
-    subtitle: 'Browser / Mobile',
+    title: 'Client Interface',
+    subtitle: 'Web / Mobile Application',
     icon: DevicesIcon,
     color: '#61DAFB',
-    items: ['React Dashboard', 'Real-time Charts', 'Bot Controls', 'Portfolio View'],
+    items: ['React SPA Dashboard', 'Real-time WebSocket Charts', 'Bot Management Console', 'Portfolio Analytics'],
   },
   {
-    title: 'AlekosTrader Core',
-    subtitle: 'Self-Hosted Server',
+    title: 'Execution Engine',
+    subtitle: 'Self-Hosted Node.js Runtime',
     icon: HubIcon,
     color: '#68A063',
-    items: ['Trading Engine', 'Strategy Executor', 'WebSocket Server', 'REST API'],
+    items: ['Order Execution Engine', 'Strategy State Machine', 'WebSocket Pub/Sub Server', 'RESTful API Gateway'],
   },
   {
-    title: 'Data Layer',
-    subtitle: 'Local Database',
+    title: 'Persistence Layer',
+    subtitle: 'SQLite / PostgreSQL',
     icon: DatabaseIcon,
     color: '#336791',
-    items: ['Trade History', 'Bot Configs', 'Strategies', 'Analytics'],
+    items: ['Trade Execution Logs', 'Algorithm Configurations', 'Strategy Parameters', 'Performance Metrics'],
   },
   {
-    title: 'Exchanges',
-    subtitle: 'Direct API Connection',
+    title: 'Exchange Connectivity',
+    subtitle: 'Direct API Integration',
     icon: ExchangeIcon,
     color: '#F7931A',
-    items: ['Coinbase', 'Binance', 'Bitvavo', 'KuCoin'],
+    items: ['Coinbase Advanced', 'Binance Spot/Futures', 'Bitvavo', 'KuCoin'],
   },
 ];
 
 // Bot types
 const botTypes = [
   {
-    name: 'DCA Bot',
-    description: 'Dollar Cost Averaging - Automated periodic buying',
+    name: 'DCA Engine',
+    description: 'Systematic accumulation algorithm with configurable time-weighted average pricing',
     icon: '📅',
     color: '#4CAF50',
-    features: ['Multi-pair', 'Scheduled buys', 'Multiple intervals'],
+    features: ['Multi-asset', 'Cron scheduling', 'Variance reduction'],
   },
   {
-    name: 'Grid Bot',
-    description: 'Grid Trading - Profit from market volatility',
+    name: 'Grid Engine',
+    description: 'Range-bound market maker capturing bid-ask spread across defined price levels',
     icon: '📊',
     color: '#2196F3',
-    features: ['Multi-pair', 'Price grid levels', 'Auto rebalancing'],
+    features: ['Multi-asset', 'Dynamic grid spacing', 'Auto-rebalancing'],
   },
   {
-    name: 'Strateger',
-    description: 'Strategy Builder - Custom rule-based trading',
+    name: 'Strateger Engine',
+    description: 'Rule-based execution framework with custom indicator composition and backtesting',
     icon: '🧠',
     color: '#9C27B0',
-    features: ['Multi-pair', 'Custom indicators', 'Backtesting'],
+    features: ['Multi-asset', 'Technical indicators', 'Historical validation'],
   },
   {
-    name: 'Closer',
-    description: 'Position Manager - Smart profit taking',
+    name: 'Closer Engine',
+    description: 'Position management system with tiered profit-taking and trailing stop mechanics',
     icon: '🎯',
     color: '#FF9800',
-    features: ['Multi-pair', 'Take profit targets', 'Tiered closing'],
+    features: ['Multi-asset', 'Partial exits', 'Risk scaling'],
   },
   {
-    name: 'Bumper',
-    description: 'Momentum Detector - Catch price pumps',
+    name: 'Bumper Engine',
+    description: 'Momentum detection algorithm for capturing rapid price movements with auto-exit logic',
     icon: '🚀',
     color: '#E91E63',
-    features: ['Multi-pair', 'Pump detection', 'Auto exits'],
+    features: ['Multi-asset', 'Volume analysis', 'Automated exits'],
   },
 ];
 
@@ -180,26 +180,26 @@ const botTypes = [
 const securityPoints = [
   {
     icon: HomeIcon,
-    title: 'Runs on YOUR Hardware',
-    description: 'Install on your own server, Raspberry Pi, or PC. No cloud dependency.',
+    title: 'On-Premise Deployment',
+    description: 'Deploy on your infrastructure: dedicated server, Raspberry Pi, or local workstation. Zero cloud dependency.',
     color: '#4CAF50',
   },
   {
     icon: KeyIcon,
-    title: 'YOUR API Keys',
-    description: 'Keys stored locally with AES-256 encryption. Never transmitted.',
+    title: 'Local Key Vault',
+    description: 'API credentials secured with AES-256-GCM encryption at rest. Keys never leave your network perimeter.',
     color: '#2196F3',
   },
   {
     icon: DatabaseIcon,
-    title: 'YOUR Database',
-    description: 'All trading data stored locally. Export anytime. Delete anytime.',
+    title: 'Data Sovereignty',
+    description: 'Complete ownership of trade history, configurations, and analytics. Export or purge at will.',
     color: '#9C27B0',
   },
   {
     icon: VisibilityOffIcon,
-    title: 'No Analytics',
-    description: 'Zero telemetry. Zero tracking. We never see your trades.',
+    title: 'Zero Telemetry',
+    description: 'No usage tracking, analytics collection, or external callbacks. Your trading activity remains private.',
     color: '#FF9800',
   },
 ];
@@ -235,7 +235,7 @@ const HeroSection = () => (
     <Container maxWidth="lg">
       <Box sx={{ textAlign: 'center', mb: 6 }}>
         <Chip
-          label="SECURE ARCHITECTURE"
+          label="INFRASTRUCTURE ARCHITECTURE"
           sx={{
             mb: 3,
             bgcolor: alpha(colors.accent.primary, 0.15),
@@ -254,14 +254,14 @@ const HeroSection = () => (
             WebkitTextFillColor: 'transparent',
           }}
         >
-          Everything in YOUR Hands
+          Self-Sovereign Trading Infrastructure
         </Typography>
         <Typography
           variant="h6"
           sx={{ color: colors.text.secondary, maxWidth: 700, mx: 'auto', mb: 4 }}
         >
-          Self-hosted. Self-controlled. Your keys, your data, your server.
-          AlekosTrader never touches your funds - you are always in control.
+          On-premise deployment. Non-custodial architecture. Your credentials, your database, your execution environment.
+          AlekosTrader operates exclusively within your network perimeter.
         </Typography>
 
         {/* Animated Shield */}
@@ -345,13 +345,13 @@ const ArchitectureFlowSection = () => (
         variant="h4"
         sx={{ textAlign: 'center', fontWeight: 700, mb: 2 }}
       >
-        How Data Flows - Securely
+        System Architecture Overview
       </Typography>
       <Typography
         variant="body1"
         sx={{ textAlign: 'center', color: colors.text.secondary, mb: 6, maxWidth: 600, mx: 'auto' }}
       >
-        Every connection is encrypted. Every piece of data stays on your hardware.
+        End-to-end TLS encryption on all external connections. All data persisted locally within your infrastructure boundary.
       </Typography>
 
       <Grid container spacing={3} alignItems="stretch">
@@ -468,7 +468,7 @@ const ArchitectureFlowSection = () => (
           <LockIcon sx={{ color: colors.trading.buy, fontSize: 32 }} />
         </Box>
         <Typography variant="h6" sx={{ fontWeight: 600, color: colors.trading.buy }}>
-          All Connections Encrypted • No External Servers • Your Network Only
+          TLS 1.3 Encryption • No External Dependencies • Air-Gapped Operation Capable
         </Typography>
       </Box>
     </Container>
@@ -541,11 +541,11 @@ const ControlSection = () => (
             WebkitTextFillColor: 'transparent',
           }}
         >
-          YOU Control Everything
+          Complete Operational Control
         </Typography>
         <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}>
-          No middleman. No cloud dependency. No third-party access.
-          Your trading infrastructure belongs to you.
+          No intermediary services. No cloud dependencies. No third-party data access.
+          Full sovereignty over your trading infrastructure and execution environment.
         </Typography>
       </Box>
 
@@ -623,10 +623,10 @@ const TradingBotsSection = () => (
     <Container maxWidth="lg">
       <Box sx={{ textAlign: 'center', mb: 6 }}>
         <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
-          5 Powerful Trading Bots
+          Algorithmic Execution Engines
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}>
-          All bots support multi-pair trading - run multiple pairs simultaneously with YOUR strategies
+          Five specialized trading algorithms with multi-asset support. Execute concurrent strategies across your configured pairs.
         </Typography>
       </Box>
 
@@ -712,7 +712,7 @@ const SecurityVisualization = () => (
     <Container maxWidth="md">
       <Box sx={{ textAlign: 'center', mb: 6 }}>
         <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
-          Security Architecture
+          Security Model Comparison
         </Typography>
       </Box>
 
@@ -729,15 +729,15 @@ const SecurityVisualization = () => (
             }}
           >
             <Typography variant="h6" sx={{ fontWeight: 700, mb: 3, color: '#f44336', textAlign: 'center' }}>
-              Traditional Cloud Platforms
+              Custodial Cloud Platforms
             </Typography>
             <Stack spacing={2}>
               {[
-                'Your keys on their servers',
-                'Your data in their cloud',
-                'Third-party access possible',
-                'Dependency on their uptime',
-                'Monthly subscription fees',
+                'API credentials stored on third-party infrastructure',
+                'Trade data persisted in external databases',
+                'Potential exposure to platform breaches',
+                'Service availability dependent on provider uptime',
+                'Recurring subscription model',
               ].map((item) => (
                 <Box key={item} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                   <Box
@@ -779,15 +779,15 @@ const SecurityVisualization = () => (
               variant="h6"
               sx={{ fontWeight: 700, mb: 3, color: colors.trading.buy, textAlign: 'center' }}
             >
-              AlekosTrader Self-Hosted
+              AlekosTrader Non-Custodial
             </Typography>
             <Stack spacing={2}>
               {[
-                'Keys encrypted on YOUR device',
-                'Data stored on YOUR server',
-                'Zero third-party access',
-                'You control the uptime',
-                'One-time license fee',
+                'AES-256-GCM encrypted credentials on local storage',
+                'SQLite/PostgreSQL database under your control',
+                'Zero external data transmission',
+                'Infrastructure availability determined by your SLA',
+                'Perpetual license with annual maintenance option',
               ].map((item) => (
                 <Box key={item} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                   <Box
@@ -839,10 +839,10 @@ const SecurityVisualization = () => (
           <HomeIcon sx={{ fontSize: 40, color: colors.trading.buy }} />
         </Box>
         <Typography variant="h5" sx={{ fontWeight: 700, mb: 1 }}>
-          Your Keys. Your Server. Your Rules.
+          Non-Custodial by Design
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          We provide the tool. You maintain complete ownership and control.
+          AlekosTrader provides execution infrastructure. You retain complete sovereignty over credentials, data, and operations.
         </Typography>
       </Box>
     </Container>
@@ -855,10 +855,10 @@ const DeploymentSection = () => (
     <Container maxWidth="lg">
       <Box sx={{ textAlign: 'center', mb: 6 }}>
         <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
-          Deploy on Your Hardware
+          Deployment Options
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Run AlekosTrader wherever you want - it's YOUR infrastructure
+          Flexible deployment across bare metal, virtualized, or containerized environments
         </Typography>
       </Box>
 
@@ -866,22 +866,22 @@ const DeploymentSection = () => (
         {[
           {
             icon: '🍓',
-            title: 'Raspberry Pi',
-            description: 'Low-power 24/7 operation. Perfect for home trading.',
-            specs: ['4GB RAM minimum', 'Silent operation', '~5W power usage'],
+            title: 'Edge Computing',
+            description: 'Raspberry Pi 4 deployment for low-power continuous operation.',
+            specs: ['ARM Cortex-A72 (4GB+ RAM)', 'Fanless silent operation', '~5W TDP'],
             popular: true,
           },
           {
             icon: '🖥️',
-            title: 'Home Server',
-            description: 'Maximum performance on your own hardware.',
-            specs: ['Full control', 'Any Linux/Windows', 'Unlimited resources'],
+            title: 'Bare Metal Server',
+            description: 'Maximum throughput on dedicated x86/x64 hardware.',
+            specs: ['Full resource allocation', 'Linux / Windows Server', 'Custom storage configuration'],
           },
           {
             icon: '☁️',
-            title: 'VPS / Cloud',
-            description: 'Deploy to any cloud provider worldwide.',
-            specs: ['DigitalOcean', 'AWS / GCP', 'Always online'],
+            title: 'Cloud VPS',
+            description: 'Virtual machine deployment on major cloud providers.',
+            specs: ['DigitalOcean / Linode', 'AWS EC2 / GCP Compute', '99.9% uptime SLA available'],
           },
         ].map((option, index) => (
           <Grid item xs={12} md={4} key={option.title}>

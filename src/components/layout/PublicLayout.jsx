@@ -18,10 +18,11 @@ import { colors } from '../../theme/tradingTheme';
 
 const navItems = [
   { label: 'Features', path: '/features' },
+  { label: 'Trade Like a Pro', path: '/trade-like-a-pro' },
   { label: 'Architecture', path: '/architecture' },
   { label: 'Pricing', path: '/pricing' },
-  { label: 'Documentation', path: '/docs' },
-  { label: '$ALK', path: '/alk' },
+  { label: 'Docs', path: '/docs' },
+  { label: 'ALK', path: '/alk' },
 ];
 
 const PublicLayout = () => {

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import { ShowChart as ChartIcon } from '@mui/icons-material';
 import { colors } from '../theme/tradingTheme';
 
 const Logo = ({
@@ -9,9 +8,9 @@ const Logo = ({
   size = 'medium' // 'small', 'medium', 'large'
 }) => {
   const sizes = {
-    small: { icon: 20, title: '1rem', tagline: '0.625rem' },
-    medium: { icon: 24, title: '1.25rem', tagline: '0.7rem' },
-    large: { icon: 32, title: '1.75rem', tagline: '0.8rem' },
+    small: { icon: 28, title: '1rem', tagline: '0.625rem' },
+    medium: { icon: 36, title: '1.25rem', tagline: '0.7rem' },
+    large: { icon: 48, title: '1.75rem', tagline: '0.8rem' },
   };
 
   const currentSize = sizes[size] || sizes.medium;
@@ -22,24 +21,35 @@ const Logo = ({
       sx={{
         display: 'flex',
         alignItems: 'center',
-        gap: 1,
+        gap: 1.5,
         cursor: onClick ? 'pointer' : 'default',
         userSelect: 'none',
       }}
     >
-      {/* Icon */}
+      {/* ALK Token Logo */}
       <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: currentSize.icon + 8,
-          height: currentSize.icon + 8,
-          borderRadius: 1,
+          width: currentSize.icon,
+          height: currentSize.icon,
+          borderRadius: '50%',
+          overflow: 'hidden',
           background: `linear-gradient(135deg, ${colors.accent.primary} 0%, ${colors.accent.secondary} 100%)`,
+          padding: '3px',
         }}
       >
-        <ChartIcon sx={{ fontSize: currentSize.icon, color: '#fff' }} />
+        <img
+          src="/alk-token.png"
+          alt="ALK"
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            borderRadius: '50%',
+          }}
+        />
       </Box>
 
       {/* Text */}
@@ -66,7 +76,7 @@ const Logo = ({
               letterSpacing: '0.02em',
             }}
           >
-            Professional Multi-Exchange Trading
+            Powered by ALK Token
           </Typography>
         )}
       </Box>

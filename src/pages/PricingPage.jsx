@@ -38,13 +38,13 @@ const pricingPlans = [
   {
     name: 'Trader',
     price: 180,
-    description: 'Essential tools for experienced traders getting started',
+    description: 'Core automation for active market participants seeking systematic execution',
     features: [
-      '2 trading bots max',
-      '1 exchange connection',
-      'Basic indicators (RSI, MACD)',
-      'Email support',
-      'Single device license',
+      '2 concurrent trading algorithms',
+      '1 exchange API integration',
+      'Core technical indicators (RSI, MACD, Bollinger)',
+      'Standard support response',
+      'Single hardware-bound license',
     ],
     buttonText: 'Get Started',
     buttonVariant: 'outlined',
@@ -52,15 +52,15 @@ const pricingPlans = [
   {
     name: 'Pro Trader',
     price: 250,
-    description: 'For serious traders who want maximum flexibility',
+    description: 'Advanced toolkit for traders requiring multi-exchange diversification and custom logic',
     popular: true,
     features: [
-      '5 trading bots max',
-      '3 exchange connections',
-      'All indicators',
-      'Strategy builder',
-      'Priority support',
-      'Single device license',
+      '5 concurrent trading algorithms',
+      '3 exchange API integrations',
+      'Full indicator suite + custom formulas',
+      'Visual strategy builder',
+      'Priority 24h support response',
+      'Single hardware-bound license',
     ],
     buttonText: 'Start Pro Trial',
     buttonVariant: 'contained',
@@ -68,14 +68,14 @@ const pricingPlans = [
   {
     name: 'Enterprise',
     price: 800,
-    description: 'Full power for professional trading operations',
+    description: 'Institutional-grade infrastructure for professional trading desks and fund operations',
     features: [
-      'Unlimited bots',
-      'Unlimited exchanges',
-      'Custom strategies',
-      'Full API access',
-      'Dedicated support',
-      '3 device licenses',
+      'Unlimited concurrent algorithms',
+      'Unlimited exchange integrations',
+      'Custom strategy development',
+      'Full REST/WebSocket API access',
+      'Dedicated account manager',
+      '3 hardware-bound licenses',
     ],
     buttonText: 'Contact Sales',
     buttonVariant: 'outlined',
@@ -83,39 +83,39 @@ const pricingPlans = [
 ];
 
 const featureComparison = [
-  { feature: 'Exchange Connections', trader: '1', proTrader: '3', enterprise: 'Unlimited' },
-  { feature: 'Active Bots', trader: '2', proTrader: '5', enterprise: 'Unlimited' },
-  { feature: 'Basic Indicators (RSI, MACD)', trader: true, proTrader: true, enterprise: true },
-  { feature: 'All Indicators', trader: false, proTrader: true, enterprise: true },
-  { feature: 'Strategy Builder', trader: false, proTrader: true, enterprise: true },
-  { feature: 'Custom Strategies', trader: false, proTrader: false, enterprise: true },
-  { feature: 'Full API Access', trader: false, proTrader: false, enterprise: true },
-  { feature: 'Email Support', trader: true, proTrader: true, enterprise: true },
-  { feature: 'Priority Support', trader: false, proTrader: true, enterprise: true },
-  { feature: 'Dedicated Support', trader: false, proTrader: false, enterprise: true },
-  { feature: 'Device Licenses', trader: '1', proTrader: '1', enterprise: '3' },
+  { feature: 'Exchange API Integrations', trader: '1', proTrader: '3', enterprise: 'Unlimited' },
+  { feature: 'Concurrent Algorithms', trader: '2', proTrader: '5', enterprise: 'Unlimited' },
+  { feature: 'Core Technical Indicators', trader: true, proTrader: true, enterprise: true },
+  { feature: 'Full Indicator Suite', trader: false, proTrader: true, enterprise: true },
+  { feature: 'Visual Strategy Builder', trader: false, proTrader: true, enterprise: true },
+  { feature: 'Custom Strategy Development', trader: false, proTrader: false, enterprise: true },
+  { feature: 'REST/WebSocket API Access', trader: false, proTrader: false, enterprise: true },
+  { feature: 'Standard Support', trader: true, proTrader: true, enterprise: true },
+  { feature: 'Priority 24h Response', trader: false, proTrader: true, enterprise: true },
+  { feature: 'Dedicated Account Manager', trader: false, proTrader: false, enterprise: true },
+  { feature: 'Hardware-Bound Licenses', trader: '1', proTrader: '1', enterprise: '3' },
 ];
 
 const faqItems = [
   {
-    question: 'Can I cancel anytime?',
-    answer: 'Yes, you can cancel your subscription at any time. There are no long-term contracts or cancellation fees. Your access will continue until the end of your current billing period.',
+    question: 'What is your cancellation policy?',
+    answer: 'Subscriptions operate on a no-commitment basis. Cancel at any time without penalties or exit fees. Your access remains active through the end of your current billing period, after which automatic renewal ceases.',
   },
   {
-    question: 'Is there a free trial?',
-    answer: 'Yes! We offer a 14-day free trial on all plans. No credit card required to start. You can explore all features and decide which plan works best for your trading needs.',
+    question: 'Do you offer a trial period?',
+    answer: 'All plans include a 14-day evaluation period with full feature access. No payment method required to begin. This allows comprehensive testing of algorithmic strategies and platform capabilities before commitment.',
   },
   {
-    question: 'How do I upgrade?',
-    answer: 'Upgrading is easy. Simply go to your account settings and select "Change Plan". The price difference will be prorated for your current billing cycle. All your bots and settings will be preserved.',
+    question: 'How are plan upgrades handled?',
+    answer: 'Upgrades are processed instantly via your account dashboard. Pricing is prorated based on your remaining billing cycle. All existing configurations, algorithms, and historical data are preserved during transition.',
   },
   {
-    question: 'What is Hardware ID Protection?',
-    answer: 'Your license is tied to your device hardware ID for security. This prevents unauthorized sharing while ensuring your license works reliably on your registered devices.',
+    question: 'How does Hardware ID licensing work?',
+    answer: 'Licenses are cryptographically bound to specific device hardware identifiers. This enterprise-standard approach prevents unauthorized distribution while guaranteeing reliable activation on registered devices. License transfers are available through support.',
   },
   {
-    question: 'What is included in the Raspberry Pi Package?',
-    answer: 'The package includes a Raspberry Pi 4 (4GB RAM), protective case, official power supply, and a 32GB SD card pre-configured with the trading software. It arrives ready to trade out of the box.',
+    question: 'What does the Raspberry Pi Package include?',
+    answer: 'The dedicated hardware package includes a Raspberry Pi 4 (4GB RAM), industrial-grade enclosure, official power supply unit, and 32GB industrial SD card with pre-installed, pre-configured trading environment. Arrives deployment-ready.',
   },
 ];
 
@@ -312,7 +312,7 @@ const PricingPage = () => {
               mb: 2,
             }}
           >
-            Simple, Transparent Pricing
+            Transparent Annual Licensing
           </Typography>
           <Typography
             variant="body1"
@@ -324,11 +324,11 @@ const PricingPage = () => {
               mb: 2,
             }}
           >
-            Choose the plan that fits your trading needs. All plans include core features with no hidden fees.
+            Select the tier aligned with your trading volume and strategy complexity. All plans include platform updates, security patches, and technical support.
           </Typography>
           <Chip
             icon={<SecurityIcon sx={{ fontSize: 16 }} />}
-            label="All licenses are Hardware ID Protected"
+            label="Enterprise-grade Hardware ID Protection on all licenses"
             sx={{
               backgroundColor: alpha(colors.trading.buy, 0.1),
               color: colors.trading.buy,
@@ -431,26 +431,26 @@ const PricingPage = () => {
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
                 <MemoryIcon sx={{ fontSize: 40, color: colors.accent.secondary || '#9c27b0' }} />
                 <Typography variant="h3" sx={{ color: colors.text.primary }}>
-                  Raspberry Pi 4 Package
+                  Dedicated Hardware Package
                 </Typography>
               </Box>
               <Typography variant="h4" sx={{ color: colors.accent.secondary || '#9c27b0', mb: 2 }}>
                 +€150
               </Typography>
               <Typography variant="body1" sx={{ color: colors.text.secondary, mb: 2 }}>
-                Pre-configured, ready to trade. Add this to any plan for a dedicated trading device.
+                Purpose-built trading appliance. Low-power, 24/7 operation. Pre-configured for immediate deployment.
               </Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <Typography variant="h5" sx={{ color: colors.text.primary, mb: 2 }}>
-                Package Includes:
+                Hardware Specifications:
               </Typography>
               <Stack spacing={1.5}>
                 {[
-                  'Raspberry Pi 4 (4GB RAM)',
-                  'Protective case',
-                  'Official power supply',
-                  '32GB SD card with pre-installed software',
+                  'Raspberry Pi 4 (4GB RAM) - ARM Cortex-A72',
+                  'Industrial-grade aluminum enclosure',
+                  'Official 15W USB-C power supply',
+                  '32GB industrial SD card with pre-configured environment',
                 ].map((item, index) => (
                   <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                     <CheckIcon sx={{ fontSize: 18, color: colors.trading.buy }} />
@@ -523,21 +523,19 @@ const PricingPage = () => {
             variant="h5"
             sx={{ color: colors.text.primary, mb: 2, fontWeight: 600 }}
           >
-            Professional Tool - Not Financial Advice
+            Risk Disclosure
           </Typography>
           <Typography
             variant="body2"
             sx={{ color: colors.text.secondary, maxWidth: 600, mx: 'auto', mb: 1 }}
           >
-            AlekosTrader is a trading tool for experienced traders. You define your own strategies,
-            set your parameters, and are fully responsible for all trading decisions and outcomes.
+            AlekosTrader provides algorithmic execution infrastructure for qualified traders. Users maintain full responsibility for strategy design, risk parameters, and capital allocation decisions.
           </Typography>
           <Typography
             variant="body2"
             sx={{ color: colors.text.secondary, maxWidth: 600, mx: 'auto' }}
           >
-            Always use our backtesting and simulation features to test your strategies before trading with real funds.
-            Past performance does not guarantee future results.
+            Mandatory practice: Validate all strategies using historical backtesting and paper trading before live deployment. Cryptocurrency markets carry substantial risk. Historical performance is not indicative of future results.
           </Typography>
         </Box>
 
@@ -563,13 +561,13 @@ const PricingPage = () => {
             variant="h3"
             sx={{ color: colors.text.primary, mb: 1 }}
           >
-            30-Day Money-Back Guarantee
+            30-Day Satisfaction Guarantee
           </Typography>
           <Typography
             variant="body2"
             sx={{ color: colors.text.secondary, maxWidth: 500, mx: 'auto' }}
           >
-            Not satisfied with the tool? Get a full refund within 30 days.
+            Full refund available within 30 days if the platform does not meet your operational requirements. No questions asked.
           </Typography>
         </Box>
       </Container>

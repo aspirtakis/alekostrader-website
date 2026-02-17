@@ -14,6 +14,8 @@ import FeaturesPage from './pages/FeaturesPage';
 import DocsPage from './pages/DocsPage';
 import AlkCoinPage from './pages/AlkCoinPage';
 import ArchitecturePage from './pages/ArchitecturePage';
+import TradeLikeAProPage from './pages/TradeLikeAProPage';
+import AdminPage from './pages/AdminPage';
 
 function App() {
   return (
@@ -28,7 +30,10 @@ function App() {
             <Route path="/docs" element={<DocsPage />} />
             <Route path="/alk" element={<AlkCoinPage />} />
             <Route path="/architecture" element={<ArchitecturePage />} />
+            <Route path="/trade-like-a-pro" element={<TradeLikeAProPage />} />
           </Route>
+          {/* Secret admin route - not linked from public pages */}
+          <Route path="/admin-alekos-2024" element={<AdminPage />} />
         </Routes>
       </Router>
     </ThemeProvider>
