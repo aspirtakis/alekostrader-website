@@ -738,6 +738,122 @@ const HeroSection = () => {
   );
 };
 
+// Whale Alert / Recent Trades Section
+const WhaleAlertSection = () => {
+  return (
+    <Box
+      sx={{
+        py: 8,
+        bgcolor: colors.background.secondary,
+        borderBottom: `1px solid ${colors.border.default}`,
+      }}
+    >
+      <Container maxWidth="lg">
+        <Box sx={{ textAlign: 'center', mb: 4 }}>
+          <Typography
+            variant="overline"
+            sx={{
+              color: '#ff9800',
+              fontWeight: 600,
+              letterSpacing: 2,
+              mb: 2,
+              display: 'block',
+            }}
+          >
+            LIVE TRADING
+          </Typography>
+          <Typography
+            variant="h2"
+            sx={{
+              fontSize: { xs: '2rem', md: '2.5rem' },
+              fontWeight: 700,
+              mb: 2,
+            }}
+          >
+            Live Chart & Trades
+          </Typography>
+          <Typography variant="body1" sx={{ color: colors.text.secondary }}>
+            Real-time price chart and recent transactions from DexScreener
+          </Typography>
+        </Box>
+
+        {/* DexScreener Embed */}
+        <Paper
+          sx={{
+            overflow: 'hidden',
+            bgcolor: '#0d0d0d',
+            border: `1px solid ${colors.border.default}`,
+            borderRadius: 2,
+          }}
+        >
+          <Box
+            sx={{
+              position: 'relative',
+              width: '100%',
+              height: { xs: 400, md: 500 },
+            }}
+          >
+            <iframe
+              src="https://dexscreener.com/solana/EmNCv3QoGe4d2H7yPJeFDmgC7GfYrbbaE7sMeko1gxsA?embed=1&theme=dark&trades=1&info=0"
+              style={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                border: 'none',
+              }}
+              title="ALK/SOL Chart"
+            />
+          </Box>
+        </Paper>
+
+        {/* Alert Info */}
+        <Paper
+          sx={{
+            mt: 3,
+            p: 3,
+            bgcolor: alpha('#ff9800', 0.1),
+            border: `1px solid ${alpha('#ff9800', 0.3)}`,
+            borderRadius: 2,
+          }}
+        >
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Typography variant="h4">🐋</Typography>
+            <Box>
+              <Typography variant="h6" sx={{ fontWeight: 600, color: '#ff9800' }}>
+                Whale Alert Guide
+              </Typography>
+              <Typography variant="body2" sx={{ color: colors.text.secondary }}>
+                Watch for trades &gt;$25 (10% of pool). Large buys = price pump. Large sells = price drop.
+                The chart above shows all trades in real-time.
+              </Typography>
+            </Box>
+          </Stack>
+        </Paper>
+
+        {/* Quick Links */}
+        <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 3 }}>
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => window.open('https://dexscreener.com/solana/EmNCv3QoGe4d2H7yPJeFDmgC7GfYrbbaE7sMeko1gxsA', '_blank')}
+            sx={{ borderColor: '#ff9800', color: '#ff9800' }}
+          >
+            Full DexScreener View
+          </Button>
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => window.open('https://birdeye.so/token/FD2imiDmjYDrh4A66JWKLvrrSLXvZh5Jep1Kx67Z6WXu?chain=solana', '_blank')}
+            sx={{ borderColor: solanaColors.purple, color: solanaColors.purple }}
+          >
+            Birdeye Analytics
+          </Button>
+        </Stack>
+      </Container>
+    </Box>
+  );
+};
+
 // Pool Stats Section (Live from DexScreener)
 const PoolStatsSection = () => {
   const { pools, totalLiquidity, totalVolume24h, totalBuys24h, totalSells24h, loading } = usePoolStats();
@@ -1305,6 +1421,7 @@ const AlkCoinPage = () => {
     <Box sx={{ bgcolor: colors.background.primary, minHeight: '100vh' }}>
       <HeroSection />
       <PoolStatsSection />
+      <WhaleAlertSection />
       <TokenomicsSection />
       <UtilitySection />
       <RoadmapSection />
