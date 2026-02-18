@@ -32,7 +32,8 @@ function App() {
               <Route path="/features" element={<FeaturesPage />} />
               <Route path="/pricing" element={<PricingPage />} />
               <Route path="/docs" element={<DocsPage />} />
-              <Route path="/alk" element={<AlkCoinPage />} />
+              {/* ALK page hidden for now */}
+            {/* <Route path="/alk" element={<AlkCoinPage />} /> */}
               <Route path="/architecture" element={<ArchitecturePage />} />
               <Route path="/trade-like-a-pro" element={<TradeLikeAProPage />} />
               <Route path="/whitepaper" element={<WhitepaperPage />} />

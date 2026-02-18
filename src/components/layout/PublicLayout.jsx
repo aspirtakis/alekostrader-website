@@ -22,7 +22,6 @@ const navItems = [
   { label: 'Architecture', path: '/architecture' },
   { label: 'Pricing', path: '/pricing' },
   { label: 'Docs', path: '/docs' },
-  { label: 'ALK', path: '/alk' },
 ];
 
 const PublicLayout = () => {
@@ -141,9 +140,6 @@ const PublicLayout = () => {
                   </Link>
                   <Link href="/docs" color="text.secondary" underline="hover" sx={{ fontSize: '0.875rem' }}>
                     Documentation
-                  </Link>
-                  <Link href="/alk" color="text.secondary" underline="hover" sx={{ fontSize: '0.875rem' }}>
-                    $ALK Token
                   </Link>
                 </Box>
               </Box>
