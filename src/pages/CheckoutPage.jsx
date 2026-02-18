@@ -17,32 +17,35 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'https://alekosauth.devsoundfusion.com';
 
+// SOL price approximately $170, prices calculated from EUR
+const SOL_PRICE_USD = 170;
+const EUR_TO_USD = 1.10;
+
 const TIER_INFO = {
   viewer: {
     name: 'Viewer',
     price: 29,
-    alkPrice: 3000,
     features: ['Trading dashboard', 'Portfolio tracking', 'Market overview']
   },
   starter: {
     name: 'Starter',
     price: 90,
-    alkPrice: 10000,
     features: ['1 trading bot', '1 exchange connection', 'Core indicators']
   },
   basic: {
     name: 'Basic',
     price: 120,
-    alkPrice: 13000,
     features: ['2 trading bots', '1 exchange connection', 'Full indicator suite', 'Priority support']
   },
   pro: {
     name: 'Pro',
     price: 250,
-    alkPrice: 27500,
     features: ['5 trading bots', '2 exchange connections', 'Realistic Strategy Tester', 'Includes Pi 5 (8GB)']
   }
 };
+
+// Treasury wallet for SOL/USDC payments
+const TREASURY_WALLET = '26dnSog1egBSo4A1hAMqvFmJEPgXrYobQUBPyZUSXYQL';
 
 export default function CheckoutPage() {
   const [searchParams] = useSearchParams();
@@ -50,7 +53,7 @@ export default function CheckoutPage() {
 
   const tier = searchParams.get('tier') || 'starter';
 
-  const [paymentMethod, setPaymentMethod] = useState('eur'); // 'eur' or 'alk'
+  const [paymentMethod, setPaymentMethod] = useState('eur'); // 'eur', 'sol', 'usdc'
   const [customerEmail, setCustomerEmail] = useState('');
   const [customerName, setCustomerName] = useState('');
   const [loading, setLoading] = useState(false);
@@ -59,7 +62,20 @@ export default function CheckoutPage() {
   const [copied, setCopied] = useState(false);
 
   const tierInfo = TIER_INFO[tier] || TIER_INFO.starter;
-  const totalPrice = paymentMethod === 'alk' ? tierInfo.alkPrice : tierInfo.price;
+
+  // Calculate prices in different currencies
+  const priceEUR = tierInfo.price;
+  const priceUSD = Math.round(priceEUR * EUR_TO_USD);
+  const priceSOL = (priceUSD / SOL_PRICE_USD).toFixed(2);
+  const priceUSDC = priceUSD;
+
+  const getDisplayPrice = () => {
+    switch (paymentMethod) {
+      case 'sol': return `${priceSOL} SOL`;
+      case 'usdc': return `${priceUSDC} USDC`;
+      default: return `€${priceEUR}`;
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -181,8 +197,8 @@ export default function CheckoutPage() {
                   <Chip label="1 Year" size="small" sx={{ ml: 1, fontSize: 10 }} />
                 </Typography>
                 <Box sx={{ textAlign: 'right' }}>
-                  <Typography sx={{ color: '#fff', fontWeight: 600 }}>€{tierInfo.price}</Typography>
-                  <Typography sx={{ color: '#00d4ff', fontSize: 12 }}>or {tierInfo.alkPrice?.toLocaleString()} ALK</Typography>
+                  <Typography sx={{ color: '#fff', fontWeight: 600 }}>€{priceEUR}</Typography>
+                  <Typography sx={{ color: '#00d4ff', fontSize: 12 }}>{priceSOL} SOL / {priceUSDC} USDC</Typography>
                 </Box>
               </Box>
               <Box sx={{ pl: 2 }}>
@@ -199,20 +215,27 @@ export default function CheckoutPage() {
               <Typography sx={{ color: 'rgba(255,255,255,0.7)', mb: 1.5, fontSize: 14 }}>
                 Payment Method
               </Typography>
-              <Box sx={{ display: 'flex', gap: 1 }}>
+              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                 <Button
                   variant={paymentMethod === 'eur' ? 'contained' : 'outlined'}
                   onClick={() => setPaymentMethod('eur')}
-                  sx={{ flex: 1, py: 1.5 }}
+                  sx={{ flex: 1, py: 1.5, minWidth: '30%' }}
                 >
-                  EUR (€{tierInfo.price})
+                  EUR (€{priceEUR})
                 </Button>
                 <Button
-                  variant={paymentMethod === 'alk' ? 'contained' : 'outlined'}
-                  onClick={() => setPaymentMethod('alk')}
-                  sx={{ flex: 1, py: 1.5, background: paymentMethod === 'alk' ? 'linear-gradient(135deg, #9945FF 0%, #14F195 100%)' : undefined }}
+                  variant={paymentMethod === 'sol' ? 'contained' : 'outlined'}
+                  onClick={() => setPaymentMethod('sol')}
+                  sx={{ flex: 1, py: 1.5, minWidth: '30%', background: paymentMethod === 'sol' ? 'linear-gradient(135deg, #9945FF 0%, #14F195 100%)' : undefined }}
                 >
-                  ALK ({tierInfo.alkPrice?.toLocaleString()})
+                  SOL ({priceSOL})
+                </Button>
+                <Button
+                  variant={paymentMethod === 'usdc' ? 'contained' : 'outlined'}
+                  onClick={() => setPaymentMethod('usdc')}
+                  sx={{ flex: 1, py: 1.5, minWidth: '30%', background: paymentMethod === 'usdc' ? 'linear-gradient(135deg, #2775CA 0%, #3B93D6 100%)' : undefined }}
+                >
+                  USDC ({priceUSDC})
                 </Button>
               </Box>
             </Box>
@@ -222,7 +245,7 @@ export default function CheckoutPage() {
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Typography variant="h6" sx={{ color: '#fff' }}>Total</Typography>
               <Typography variant="h5" sx={{ color: '#00d4ff', fontWeight: 700 }}>
-                {paymentMethod === 'alk' ? `${totalPrice.toLocaleString()} ALK` : `€${totalPrice}`}
+                {getDisplayPrice()}
               </Typography>
             </Box>
 
@@ -230,10 +253,13 @@ export default function CheckoutPage() {
               One-time payment • No recurring charges
             </Typography>
 
-            {paymentMethod === 'alk' && (
+            {(paymentMethod === 'sol' || paymentMethod === 'usdc') && (
               <Box sx={{ mt: 2, p: 1.5, background: 'rgba(153,69,255,0.1)', borderRadius: 1, border: '1px solid rgba(153,69,255,0.3)' }}>
                 <Typography sx={{ color: '#9945FF', fontSize: 11 }}>
-                  ALK Token (Solana): FD2imiDm...6WXu
+                  Send to Solana wallet:
+                </Typography>
+                <Typography sx={{ color: '#14F195', fontSize: 12, fontFamily: 'monospace', wordBreak: 'break-all' }}>
+                  {TREASURY_WALLET}
                 </Typography>
               </Box>
             )}
@@ -285,11 +311,11 @@ export default function CheckoutPage() {
               sx={{
                 py: 1.5,
                 fontSize: 18,
-                background: paymentMethod === 'alk'
+                background: paymentMethod !== 'eur'
                   ? 'linear-gradient(135deg, #9945FF 0%, #14F195 100%)'
                   : 'linear-gradient(135deg, #00d4ff 0%, #0099cc 100%)',
                 '&:hover': {
-                  background: paymentMethod === 'alk'
+                  background: paymentMethod !== 'eur'
                     ? 'linear-gradient(135deg, #aa55ff 0%, #25ff99 100%)'
                     : 'linear-gradient(135deg, #00e5ff 0%, #00aadd 100%)'
                 }
@@ -297,10 +323,8 @@ export default function CheckoutPage() {
             >
               {loading ? (
                 <CircularProgress size={24} sx={{ color: '#fff' }} />
-              ) : paymentMethod === 'alk' ? (
-                `Pay ${totalPrice.toLocaleString()} ALK`
               ) : (
-                `Pay €${totalPrice}`
+                `Pay ${getDisplayPrice()}`
               )}
             </Button>
 

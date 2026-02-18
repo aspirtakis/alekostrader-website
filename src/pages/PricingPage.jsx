@@ -37,7 +37,6 @@ const pricingPlans = [
   {
     name: 'Viewer',
     price: 29,
-    alkPrice: 3000,
     description: 'Track your portfolio and monitor markets',
     features: [
       'Trading dashboard',
@@ -52,7 +51,6 @@ const pricingPlans = [
   {
     name: 'Starter',
     price: 90,
-    alkPrice: 10000,
     description: 'Begin your trading automation journey',
     features: [
       '1 trading bot',
@@ -66,7 +64,6 @@ const pricingPlans = [
   {
     name: 'Basic',
     price: 120,
-    alkPrice: 13000,
     description: 'For active traders who need more flexibility',
     features: [
       '2 trading bots',
@@ -80,7 +77,6 @@ const pricingPlans = [
   {
     name: 'Pro',
     price: 250,
-    alkPrice: 27500,
     description: 'Advanced trading with multi-exchange support',
     popular: true,
     features: [
@@ -98,7 +94,6 @@ const pricingPlans = [
   {
     name: 'Unlimited',
     price: 400,
-    alkPrice: 44000,
     description: 'Full power for serious traders - requires dedicated server',
     features: [
       'Unlimited trading bots',
@@ -152,7 +147,7 @@ const faqItems = [
 ];
 
 const PricingCard = ({ plan, onBuy }) => {
-  const { name, price, alkPrice, description, features, popular, buttonText, buttonVariant, contactOnly, serverRequired, hardwareIncluded, hardwareInfo } = plan;
+  const { name, price, description, features, popular, buttonText, buttonVariant, contactOnly, serverRequired, hardwareIncluded, hardwareInfo } = plan;
 
   return (
     <Card
@@ -207,10 +202,6 @@ const PricingCard = ({ plan, onBuy }) => {
           </Typography>
         </Box>
 
-        {/* ALK Price */}
-        <Typography variant="caption" sx={{ color: colors.accent.primary, display: 'block', mb: 2 }}>
-          or {alkPrice?.toLocaleString()} ALK tokens
-        </Typography>
 
         {/* Hardware included badge */}
         {hardwareIncluded && (
@@ -442,7 +433,7 @@ const PricingPage = () => {
           </TableContainer>
         </Box>
 
-        {/* ALK Token Payment Info */}
+        {/* Crypto Payment Info */}
         <Box
           sx={{
             mb: 6,
@@ -454,13 +445,10 @@ const PricingPage = () => {
           }}
         >
           <Typography variant="h5" sx={{ color: colors.text.primary, mb: 1 }}>
-            Pay with ALK Tokens
+            Multiple Payment Options
           </Typography>
-          <Typography variant="body2" sx={{ color: colors.text.secondary, mb: 1 }}>
-            Use ALK tokens for discounted pricing. Available on Solana network.
-          </Typography>
-          <Typography variant="caption" sx={{ color: colors.accent.primary }}>
-            Token: FD2imiDmjYDrh4A66JWKLvrrSLXvZh5Jep1Kx67Z6WXu
+          <Typography variant="body2" sx={{ color: colors.text.secondary }}>
+            Pay with EUR (PayPal), SOL, or USDC on Solana network.
           </Typography>
         </Box>
 
