@@ -21,25 +21,25 @@ const TIER_INFO = {
   viewer: {
     name: 'Viewer',
     price: 29,
-    alkPrice: 1500,
+    alkPrice: 3000,
     features: ['Trading dashboard', 'Portfolio tracking', 'Market overview']
   },
   starter: {
     name: 'Starter',
     price: 90,
-    alkPrice: 5000,
+    alkPrice: 10000,
     features: ['1 trading bot', '1 exchange connection', 'Core indicators']
   },
   basic: {
     name: 'Basic',
     price: 120,
-    alkPrice: 7000,
+    alkPrice: 13000,
     features: ['2 trading bots', '1 exchange connection', 'Full indicator suite', 'Priority support']
   },
   pro: {
     name: 'Pro',
     price: 250,
-    alkPrice: 15000,
+    alkPrice: 27500,
     features: ['5 trading bots', '2 exchange connections', 'Realistic Strategy Tester', 'Includes Pi 5 (8GB)']
   }
 };

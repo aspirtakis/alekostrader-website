@@ -37,7 +37,7 @@ const pricingPlans = [
   {
     name: 'Viewer',
     price: 29,
-    alkPrice: 1500,
+    alkPrice: 3000,
     description: 'Track your portfolio and monitor markets',
     features: [
       'Trading dashboard',
@@ -52,7 +52,7 @@ const pricingPlans = [
   {
     name: 'Starter',
     price: 90,
-    alkPrice: 5000,
+    alkPrice: 10000,
     description: 'Begin your trading automation journey',
     features: [
       '1 trading bot',
@@ -66,7 +66,7 @@ const pricingPlans = [
   {
     name: 'Basic',
     price: 120,
-    alkPrice: 7000,
+    alkPrice: 13000,
     description: 'For active traders who need more flexibility',
     features: [
       '2 trading bots',
@@ -80,7 +80,7 @@ const pricingPlans = [
   {
     name: 'Pro',
     price: 250,
-    alkPrice: 15000,
+    alkPrice: 27500,
     description: 'Advanced trading with multi-exchange support',
     popular: true,
     features: [
@@ -98,7 +98,7 @@ const pricingPlans = [
   {
     name: 'Unlimited',
     price: 400,
-    alkPrice: 25000,
+    alkPrice: 44000,
     description: 'Full power for serious traders - requires dedicated server',
     features: [
       'Unlimited trading bots',
