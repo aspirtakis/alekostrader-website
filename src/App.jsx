@@ -16,6 +16,7 @@ import AlkCoinPage from './pages/AlkCoinPage';
 import ArchitecturePage from './pages/ArchitecturePage';
 import TradeLikeAProPage from './pages/TradeLikeAProPage';
 import AdminPage from './pages/AdminPage';
+import WhitepaperPage from './pages/WhitepaperPage';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
             <Route path="/alk" element={<AlkCoinPage />} />
             <Route path="/architecture" element={<ArchitecturePage />} />
             <Route path="/trade-like-a-pro" element={<TradeLikeAProPage />} />
+            <Route path="/whitepaper" element={<WhitepaperPage />} />
           </Route>
           {/* Secret admin route - not linked from public pages */}
           <Route path="/admin-alekos-2024" element={<AdminPage />} />

@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -35,6 +35,7 @@ import {
   Diamond as DiamondIcon,
   Layers as LayersIcon,
   OpenInNew as OpenInNewIcon,
+  Description as WhitepaperIcon,
 } from '@mui/icons-material';
 import { colors } from '../theme/tradingTheme';
 
@@ -558,7 +559,17 @@ const HeroSection = () => {
               </Stack>
 
               {/* Additional Links */}
-              <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+              <Stack direction="row" spacing={2} sx={{ mt: 2 }} flexWrap="wrap">
+                <Button
+                  component={Link}
+                  to="/whitepaper"
+                  variant="text"
+                  size="small"
+                  startIcon={<WhitepaperIcon />}
+                  sx={{ color: solanaColors.purple, fontWeight: 600 }}
+                >
+                  Whitepaper
+                </Button>
                 <Button
                   variant="text"
                   size="small"
