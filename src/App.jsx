@@ -17,6 +17,7 @@ import ArchitecturePage from './pages/ArchitecturePage';
 import TradeLikeAProPage from './pages/TradeLikeAProPage';
 import AdminPage from './pages/AdminPage';
 import WhitepaperPage from './pages/WhitepaperPage';
+import CheckoutPage from './pages/CheckoutPage';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path="/architecture" element={<ArchitecturePage />} />
             <Route path="/trade-like-a-pro" element={<TradeLikeAProPage />} />
             <Route path="/whitepaper" element={<WhitepaperPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
           </Route>
           {/* Secret admin route - not linked from public pages */}
           <Route path="/admin-alekos-2024" element={<AdminPage />} />

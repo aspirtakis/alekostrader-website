@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -119,7 +120,7 @@ const faqItems = [
   },
 ];
 
-const PricingCard = ({ plan, includeHardware, onHardwareToggle }) => {
+const PricingCard = ({ plan, includeHardware, onHardwareToggle, onBuy }) => {
   const { name, price, description, features, popular, buttonText, buttonVariant } = plan;
   const totalPrice = includeHardware ? price + 150 : price;
 
@@ -247,6 +248,7 @@ const PricingCard = ({ plan, includeHardware, onHardwareToggle }) => {
           variant={buttonVariant}
           color="primary"
           size="large"
+          onClick={onBuy}
           sx={{
             py: 1.5,
             ...(buttonVariant === 'contained' && {
@@ -279,7 +281,15 @@ const FeatureValue = ({ value }) => {
   );
 };
 
+// Map plan names to tier slugs
+const TIER_SLUGS = {
+  'Trader': 'trader',
+  'Pro Trader': 'pro',
+  'Enterprise': 'enterprise'
+};
+
 const PricingPage = () => {
+  const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
   const [hardwareSelections, setHardwareSelections] = useState({
     Trader: false,
@@ -296,6 +306,12 @@ const PricingPage = () => {
       ...prev,
       [planName]: !prev[planName],
     }));
+  };
+
+  const handleBuy = (planName) => () => {
+    const tier = TIER_SLUGS[planName];
+    const hardware = hardwareSelections[planName];
+    navigate(`/checkout?tier=${tier}&hardware=${hardware}`);
   };
 
   return (
@@ -345,6 +361,7 @@ const PricingPage = () => {
                 plan={plan}
                 includeHardware={hardwareSelections[plan.name]}
                 onHardwareToggle={handleHardwareToggle(plan.name)}
+                onBuy={handleBuy(plan.name)}
               />
             </Grid>
           ))}
