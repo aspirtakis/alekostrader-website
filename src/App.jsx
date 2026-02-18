@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import tradingTheme from './theme/tradingTheme';
+import WalletProvider from './components/WalletProvider';
 
 // Layout
 import PublicLayout from './components/layout/PublicLayout';
@@ -23,23 +24,25 @@ function App() {
   return (
     <ThemeProvider theme={tradingTheme}>
       <CssBaseline />
-      <Router>
-        <Routes>
-          <Route element={<PublicLayout />}>
-            <Route index element={<LandingPage />} />
-            <Route path="/features" element={<FeaturesPage />} />
-            <Route path="/pricing" element={<PricingPage />} />
-            <Route path="/docs" element={<DocsPage />} />
-            <Route path="/alk" element={<AlkCoinPage />} />
-            <Route path="/architecture" element={<ArchitecturePage />} />
-            <Route path="/trade-like-a-pro" element={<TradeLikeAProPage />} />
-            <Route path="/whitepaper" element={<WhitepaperPage />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
-          </Route>
-          {/* Secret admin route - not linked from public pages */}
-          <Route path="/admin-alekos-2024" element={<AdminPage />} />
-        </Routes>
-      </Router>
+      <WalletProvider>
+        <Router>
+          <Routes>
+            <Route element={<PublicLayout />}>
+              <Route index element={<LandingPage />} />
+              <Route path="/features" element={<FeaturesPage />} />
+              <Route path="/pricing" element={<PricingPage />} />
+              <Route path="/docs" element={<DocsPage />} />
+              <Route path="/alk" element={<AlkCoinPage />} />
+              <Route path="/architecture" element={<ArchitecturePage />} />
+              <Route path="/trade-like-a-pro" element={<TradeLikeAProPage />} />
+              <Route path="/whitepaper" element={<WhitepaperPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
+            </Route>
+            {/* Secret admin route - not linked from public pages */}
+            <Route path="/admin-alekos-2024" element={<AdminPage />} />
+          </Routes>
+        </Router>
+      </WalletProvider>
     </ThemeProvider>
   );
 }

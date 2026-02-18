@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -14,6 +14,11 @@ import {
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import { useWallet, useConnection } from '@solana/wallet-adapter-react';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import { PublicKey, Transaction, SystemProgram, LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { getAssociatedTokenAddress, createTransferInstruction, TOKEN_PROGRAM_ID } from '@solana/spl-token';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'https://alekosauth.devsoundfusion.com';
 
@@ -45,25 +50,30 @@ const TIER_INFO = {
 };
 
 // Treasury wallet for SOL/USDC payments
-const TREASURY_WALLET = '26dnSog1egBSo4A1hAMqvFmJEPgXrYobQUBPyZUSXYQL';
+const TREASURY_WALLET = new PublicKey('26dnSog1egBSo4A1hAMqvFmJEPgXrYobQUBPyZUSXYQL');
+// USDC mint on Solana mainnet
+const USDC_MINT = new PublicKey('EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v');
 
 export default function CheckoutPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { connection } = useConnection();
+  const { publicKey, sendTransaction, connected } = useWallet();
 
   const tier = searchParams.get('tier') || 'starter';
 
-  const [paymentMethod, setPaymentMethod] = useState('eur'); // 'eur', 'sol', 'usdc'
+  const [paymentMethod, setPaymentMethod] = useState('eur');
   const [customerEmail, setCustomerEmail] = useState('');
   const [customerName, setCustomerName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [txSignature, setTxSignature] = useState('');
 
   const tierInfo = TIER_INFO[tier] || TIER_INFO.starter;
 
-  // Calculate prices in different currencies
+  // Calculate prices
   const priceEUR = tierInfo.price;
   const priceUSD = Math.round(priceEUR * EUR_TO_USD);
   const priceSOL = (priceUSD / SOL_PRICE_USD).toFixed(2);
@@ -77,13 +87,79 @@ export default function CheckoutPage() {
     }
   };
 
+  // Send SOL payment
+  const sendSOLPayment = useCallback(async () => {
+    if (!publicKey || !connection) return null;
+
+    const lamports = Math.round(parseFloat(priceSOL) * LAMPORTS_PER_SOL);
+
+    const transaction = new Transaction().add(
+      SystemProgram.transfer({
+        fromPubkey: publicKey,
+        toPubkey: TREASURY_WALLET,
+        lamports,
+      })
+    );
+
+    const { blockhash } = await connection.getLatestBlockhash();
+    transaction.recentBlockhash = blockhash;
+    transaction.feePayer = publicKey;
+
+    const signature = await sendTransaction(transaction, connection);
+    await connection.confirmTransaction(signature, 'confirmed');
+
+    return signature;
+  }, [publicKey, connection, sendTransaction, priceSOL]);
+
+  // Send USDC payment
+  const sendUSDCPayment = useCallback(async () => {
+    if (!publicKey || !connection) return null;
+
+    const senderTokenAccount = await getAssociatedTokenAddress(USDC_MINT, publicKey);
+    const receiverTokenAccount = await getAssociatedTokenAddress(USDC_MINT, TREASURY_WALLET);
+
+    // USDC has 6 decimals
+    const amount = priceUSDC * 1_000_000;
+
+    const transaction = new Transaction().add(
+      createTransferInstruction(
+        senderTokenAccount,
+        receiverTokenAccount,
+        publicKey,
+        amount,
+        [],
+        TOKEN_PROGRAM_ID
+      )
+    );
+
+    const { blockhash } = await connection.getLatestBlockhash();
+    transaction.recentBlockhash = blockhash;
+    transaction.feePayer = publicKey;
+
+    const signature = await sendTransaction(transaction, connection);
+    await connection.confirmTransaction(signature, 'confirmed');
+
+    return signature;
+  }, [publicKey, connection, sendTransaction, priceUSDC]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
     try {
-      // Use test-purchase endpoint (will work without PayPal configured)
+      let paymentSignature = null;
+
+      // Handle crypto payments
+      if (paymentMethod === 'sol' && connected) {
+        paymentSignature = await sendSOLPayment();
+        setTxSignature(paymentSignature);
+      } else if (paymentMethod === 'usdc' && connected) {
+        paymentSignature = await sendUSDCPayment();
+        setTxSignature(paymentSignature);
+      }
+
+      // Create license via API
       const response = await fetch(`${API_BASE}/api/checkout/test-purchase`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -91,7 +167,8 @@ export default function CheckoutPage() {
           tier,
           paymentMethod,
           customerEmail,
-          customerName
+          customerName,
+          txSignature: paymentSignature
         })
       });
 
@@ -103,6 +180,7 @@ export default function CheckoutPage() {
 
       setSuccess(data);
     } catch (err) {
+      console.error('Payment error:', err);
       setError(err.message || 'Something went wrong');
     } finally {
       setLoading(false);
@@ -152,6 +230,7 @@ export default function CheckoutPage() {
                 <strong>Order ID:</strong> {success.orderId}<br />
                 <strong>Valid Until:</strong> {new Date(success.expiresAt).toLocaleDateString()}<br />
                 <strong>Email Sent:</strong> {success.emailSent ? 'Yes' : 'Check spam folder'}
+                {txSignature && <><br /><strong>TX:</strong> {txSignature.slice(0, 20)}...</>}
               </Typography>
             </Alert>
 
@@ -253,14 +332,19 @@ export default function CheckoutPage() {
               One-time payment • No recurring charges
             </Typography>
 
+            {/* Wallet Connection for crypto payments */}
             {(paymentMethod === 'sol' || paymentMethod === 'usdc') && (
-              <Box sx={{ mt: 2, p: 1.5, background: 'rgba(153,69,255,0.1)', borderRadius: 1, border: '1px solid rgba(153,69,255,0.3)' }}>
-                <Typography sx={{ color: '#9945FF', fontSize: 11 }}>
-                  Send to Solana wallet:
+              <Box sx={{ mt: 3, p: 2, background: 'rgba(153,69,255,0.1)', borderRadius: 1, border: '1px solid rgba(153,69,255,0.3)' }}>
+                <Typography sx={{ color: '#9945FF', fontSize: 13, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <AccountBalanceWalletIcon fontSize="small" />
+                  Connect your wallet to pay with {paymentMethod.toUpperCase()}
                 </Typography>
-                <Typography sx={{ color: '#14F195', fontSize: 12, fontFamily: 'monospace', wordBreak: 'break-all' }}>
-                  {TREASURY_WALLET}
-                </Typography>
+                <WalletMultiButton style={{ width: '100%' }} />
+                {connected && (
+                  <Typography sx={{ color: '#14F195', fontSize: 11, mt: 1 }}>
+                    Connected: {publicKey?.toBase58().slice(0, 8)}...{publicKey?.toBase58().slice(-8)}
+                  </Typography>
+                )}
               </Box>
             )}
           </Paper>
@@ -307,7 +391,7 @@ export default function CheckoutPage() {
               variant="contained"
               fullWidth
               size="large"
-              disabled={loading || !customerEmail}
+              disabled={loading || !customerEmail || ((paymentMethod === 'sol' || paymentMethod === 'usdc') && !connected)}
               sx={{
                 py: 1.5,
                 fontSize: 18,
@@ -323,6 +407,8 @@ export default function CheckoutPage() {
             >
               {loading ? (
                 <CircularProgress size={24} sx={{ color: '#fff' }} />
+              ) : (paymentMethod === 'sol' || paymentMethod === 'usdc') && !connected ? (
+                'Connect Wallet First'
               ) : (
                 `Pay ${getDisplayPrice()}`
               )}
