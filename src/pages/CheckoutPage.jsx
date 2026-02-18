@@ -10,8 +10,6 @@ import {
   Divider,
   CircularProgress,
   Alert,
-  Checkbox,
-  FormControlLabel,
   Chip
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -20,33 +18,39 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 const API_BASE = import.meta.env.VITE_API_URL || 'https://alekosauth.devsoundfusion.com';
 
 const TIER_INFO = {
-  trader: {
-    name: 'Trader',
-    price: 180,
-    features: ['2 concurrent algorithms', '1 exchange integration', 'Core indicators']
+  viewer: {
+    name: 'Viewer',
+    price: 29,
+    alkPrice: 1500,
+    features: ['Trading dashboard', 'Portfolio tracking', 'Market overview']
+  },
+  starter: {
+    name: 'Starter',
+    price: 90,
+    alkPrice: 5000,
+    features: ['1 trading bot', '1 exchange connection', 'Core indicators']
+  },
+  basic: {
+    name: 'Basic',
+    price: 120,
+    alkPrice: 7000,
+    features: ['2 trading bots', '1 exchange connection', 'Full indicator suite', 'Priority support']
   },
   pro: {
-    name: 'Pro Trader',
+    name: 'Pro',
     price: 250,
-    features: ['5 concurrent algorithms', '3 exchange integrations', 'Visual strategy builder', 'Priority support']
-  },
-  enterprise: {
-    name: 'Enterprise',
-    price: 800,
-    features: ['Unlimited algorithms', 'Unlimited exchanges', 'Custom development', 'Dedicated manager']
+    alkPrice: 15000,
+    features: ['5 trading bots', '2 exchange connections', 'Realistic Strategy Tester', 'Includes Pi 5 (8GB)']
   }
 };
-
-const HARDWARE_PRICE = 150;
 
 export default function CheckoutPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const tier = searchParams.get('tier') || 'pro';
-  const includeHardwareParam = searchParams.get('hardware') === 'true';
+  const tier = searchParams.get('tier') || 'starter';
 
-  const [includeHardware, setIncludeHardware] = useState(includeHardwareParam);
+  const [paymentMethod, setPaymentMethod] = useState('eur'); // 'eur' or 'alk'
   const [customerEmail, setCustomerEmail] = useState('');
   const [customerName, setCustomerName] = useState('');
   const [loading, setLoading] = useState(false);
@@ -54,8 +58,8 @@ export default function CheckoutPage() {
   const [success, setSuccess] = useState(null);
   const [copied, setCopied] = useState(false);
 
-  const tierInfo = TIER_INFO[tier] || TIER_INFO.pro;
-  const totalPrice = tierInfo.price + (includeHardware ? HARDWARE_PRICE : 0);
+  const tierInfo = TIER_INFO[tier] || TIER_INFO.starter;
+  const totalPrice = paymentMethod === 'alk' ? tierInfo.alkPrice : tierInfo.price;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -69,7 +73,7 @@ export default function CheckoutPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           tier,
-          includeHardware,
+          paymentMethod,
           customerEmail,
           customerName
         })
@@ -176,9 +180,10 @@ export default function CheckoutPage() {
                   {tierInfo.name} License
                   <Chip label="1 Year" size="small" sx={{ ml: 1, fontSize: 10 }} />
                 </Typography>
-                <Typography sx={{ color: '#fff', fontWeight: 600 }}>
-                  €{tierInfo.price}
-                </Typography>
+                <Box sx={{ textAlign: 'right' }}>
+                  <Typography sx={{ color: '#fff', fontWeight: 600 }}>€{tierInfo.price}</Typography>
+                  <Typography sx={{ color: '#00d4ff', fontSize: 12 }}>or {tierInfo.alkPrice?.toLocaleString()} ALK</Typography>
+                </Box>
               </Box>
               <Box sx={{ pl: 2 }}>
                 {tierInfo.features.map((f, i) => (
@@ -189,42 +194,49 @@ export default function CheckoutPage() {
               </Box>
             </Box>
 
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={includeHardware}
-                  onChange={(e) => setIncludeHardware(e.target.checked)}
-                  sx={{ color: '#00d4ff' }}
-                />
-              }
-              label={
-                <Box>
-                  <Typography sx={{ color: '#fff' }}>
-                    Add Raspberry Pi 4 Kit
-                    <Typography component="span" sx={{ color: '#00d4ff', ml: 1 }}>
-                      +€{HARDWARE_PRICE}
-                    </Typography>
-                  </Typography>
-                  <Typography sx={{ color: 'rgba(255,255,255,0.5)', fontSize: 12 }}>
-                    Pre-configured trading hardware
-                  </Typography>
-                </Box>
-              }
-              sx={{ mb: 2, alignItems: 'flex-start' }}
-            />
+            {/* Payment Method Selection */}
+            <Box sx={{ mb: 3 }}>
+              <Typography sx={{ color: 'rgba(255,255,255,0.7)', mb: 1.5, fontSize: 14 }}>
+                Payment Method
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <Button
+                  variant={paymentMethod === 'eur' ? 'contained' : 'outlined'}
+                  onClick={() => setPaymentMethod('eur')}
+                  sx={{ flex: 1, py: 1.5 }}
+                >
+                  EUR (€{tierInfo.price})
+                </Button>
+                <Button
+                  variant={paymentMethod === 'alk' ? 'contained' : 'outlined'}
+                  onClick={() => setPaymentMethod('alk')}
+                  sx={{ flex: 1, py: 1.5, background: paymentMethod === 'alk' ? 'linear-gradient(135deg, #9945FF 0%, #14F195 100%)' : undefined }}
+                >
+                  ALK ({tierInfo.alkPrice?.toLocaleString()})
+                </Button>
+              </Box>
+            </Box>
 
             <Divider sx={{ my: 2, borderColor: 'rgba(255,255,255,0.1)' }} />
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <Typography variant="h6" sx={{ color: '#fff' }}>Total</Typography>
               <Typography variant="h5" sx={{ color: '#00d4ff', fontWeight: 700 }}>
-                €{totalPrice}
+                {paymentMethod === 'alk' ? `${totalPrice.toLocaleString()} ALK` : `€${totalPrice}`}
               </Typography>
             </Box>
 
             <Typography sx={{ color: 'rgba(255,255,255,0.4)', fontSize: 12, mt: 1 }}>
               One-time payment • No recurring charges
             </Typography>
+
+            {paymentMethod === 'alk' && (
+              <Box sx={{ mt: 2, p: 1.5, background: 'rgba(153,69,255,0.1)', borderRadius: 1, border: '1px solid rgba(153,69,255,0.3)' }}>
+                <Typography sx={{ color: '#9945FF', fontSize: 11 }}>
+                  ALK Token (Solana): FD2imiDm...6WXu
+                </Typography>
+              </Box>
+            )}
           </Paper>
 
           {/* Checkout Form */}
@@ -273,12 +285,20 @@ export default function CheckoutPage() {
               sx={{
                 py: 1.5,
                 fontSize: 18,
-                background: 'linear-gradient(135deg, #00d4ff 0%, #0099cc 100%)',
-                '&:hover': { background: 'linear-gradient(135deg, #00e5ff 0%, #00aadd 100%)' }
+                background: paymentMethod === 'alk'
+                  ? 'linear-gradient(135deg, #9945FF 0%, #14F195 100%)'
+                  : 'linear-gradient(135deg, #00d4ff 0%, #0099cc 100%)',
+                '&:hover': {
+                  background: paymentMethod === 'alk'
+                    ? 'linear-gradient(135deg, #aa55ff 0%, #25ff99 100%)'
+                    : 'linear-gradient(135deg, #00e5ff 0%, #00aadd 100%)'
+                }
               }}
             >
               {loading ? (
                 <CircularProgress size={24} sx={{ color: '#fff' }} />
+              ) : paymentMethod === 'alk' ? (
+                `Pay ${totalPrice.toLocaleString()} ALK`
               ) : (
                 `Pay €${totalPrice}`
               )}

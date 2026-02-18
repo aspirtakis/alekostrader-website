@@ -21,8 +21,6 @@ import {
   AccordionDetails,
   Stack,
   alpha,
-  Checkbox,
-  FormControlLabel,
 } from '@mui/material';
 import {
   Check as CheckIcon,
@@ -37,64 +35,97 @@ import { colors } from '../theme/tradingTheme';
 
 const pricingPlans = [
   {
-    name: 'Trader',
-    price: 180,
-    description: 'Core automation for active market participants seeking systematic execution',
+    name: 'Viewer',
+    price: 29,
+    alkPrice: 1500,
+    description: 'Track your portfolio and monitor markets',
     features: [
-      '2 concurrent trading algorithms',
-      '1 exchange API integration',
-      'Core technical indicators (RSI, MACD, Bollinger)',
-      'Standard support response',
-      'Single hardware-bound license',
+      'Trading dashboard',
+      'Portfolio tracking',
+      'Market overview',
+      'Basic support',
+    ],
+    buttonText: 'Start Free',
+    buttonVariant: 'outlined',
+    compact: true,
+  },
+  {
+    name: 'Starter',
+    price: 90,
+    alkPrice: 5000,
+    description: 'Begin your trading automation journey',
+    features: [
+      '1 trading bot',
+      '1 exchange connection',
+      'Core indicators',
+      'Email support',
     ],
     buttonText: 'Get Started',
     buttonVariant: 'outlined',
   },
   {
-    name: 'Pro Trader',
-    price: 250,
-    description: 'Advanced toolkit for traders requiring multi-exchange diversification and custom logic',
-    popular: true,
+    name: 'Basic',
+    price: 120,
+    alkPrice: 7000,
+    description: 'For active traders who need more flexibility',
     features: [
-      '5 concurrent trading algorithms',
-      '3 exchange API integrations',
-      'Full indicator suite + custom formulas',
-      'Visual strategy builder',
-      'Priority 24h support response',
-      'Single hardware-bound license',
+      '2 trading bots',
+      '1 exchange connection',
+      'Full indicator suite',
+      'Priority support',
     ],
-    buttonText: 'Start Pro Trial',
-    buttonVariant: 'contained',
+    buttonText: 'Get Basic',
+    buttonVariant: 'outlined',
   },
   {
-    name: 'Enterprise',
-    price: 800,
-    description: 'Institutional-grade infrastructure for professional trading desks and fund operations',
+    name: 'Pro',
+    price: 250,
+    alkPrice: 15000,
+    description: 'Advanced trading with multi-exchange support',
+    popular: true,
     features: [
-      'Unlimited concurrent algorithms',
-      'Unlimited exchange integrations',
-      'Custom strategy development',
-      'Full REST/WebSocket API access',
-      'Dedicated account manager',
-      '3 hardware-bound licenses',
+      '5 trading bots',
+      '2 exchange connections',
+      'Realistic Strategy Tester',
+      'Custom indicators',
+      'Priority 24h support',
     ],
-    buttonText: 'Contact Sales',
+    buttonText: 'Go Pro',
+    buttonVariant: 'contained',
+    hardwareIncluded: true,
+    hardwareInfo: 'Includes Raspberry Pi 5 (8GB RAM)',
+  },
+  {
+    name: 'Unlimited',
+    price: 400,
+    alkPrice: 25000,
+    description: 'Full power for serious traders - requires dedicated server',
+    features: [
+      'Unlimited trading bots',
+      '5 exchange connections',
+      'Full API access',
+      'Custom development',
+      'Dedicated support',
+    ],
+    buttonText: 'Contact Us',
     buttonVariant: 'outlined',
+    contactOnly: true,
+    serverRequired: true,
   },
 ];
 
 const featureComparison = [
-  { feature: 'Exchange API Integrations', trader: '1', proTrader: '3', enterprise: 'Unlimited' },
-  { feature: 'Concurrent Algorithms', trader: '2', proTrader: '5', enterprise: 'Unlimited' },
-  { feature: 'Core Technical Indicators', trader: true, proTrader: true, enterprise: true },
-  { feature: 'Full Indicator Suite', trader: false, proTrader: true, enterprise: true },
-  { feature: 'Visual Strategy Builder', trader: false, proTrader: true, enterprise: true },
-  { feature: 'Custom Strategy Development', trader: false, proTrader: false, enterprise: true },
-  { feature: 'REST/WebSocket API Access', trader: false, proTrader: false, enterprise: true },
-  { feature: 'Standard Support', trader: true, proTrader: true, enterprise: true },
-  { feature: 'Priority 24h Response', trader: false, proTrader: true, enterprise: true },
-  { feature: 'Dedicated Account Manager', trader: false, proTrader: false, enterprise: true },
-  { feature: 'Hardware-Bound Licenses', trader: '1', proTrader: '1', enterprise: '3' },
+  { feature: 'Trading Bots', viewer: '-', starter: '1', basic: '2', pro: '5', unlimited: 'Unlimited' },
+  { feature: 'Exchange Connections', viewer: '-', starter: '1', basic: '1', pro: '2', unlimited: '5' },
+  { feature: 'Portfolio Tracking', viewer: true, starter: true, basic: true, pro: true, unlimited: true },
+  { feature: 'Trading Dashboard', viewer: true, starter: true, basic: true, pro: true, unlimited: true },
+  { feature: 'Core Indicators', viewer: false, starter: true, basic: true, pro: true, unlimited: true },
+  { feature: 'Full Indicator Suite', viewer: false, starter: false, basic: true, pro: true, unlimited: true },
+  { feature: 'Realistic Strategy Tester', viewer: false, starter: false, basic: false, pro: true, unlimited: true },
+  { feature: 'Custom Indicators', viewer: false, starter: false, basic: false, pro: true, unlimited: true },
+  { feature: 'Full API Access', viewer: false, starter: false, basic: false, pro: false, unlimited: true },
+  { feature: 'Priority Support', viewer: false, starter: false, basic: true, pro: true, unlimited: true },
+  { feature: 'Hardware Included', viewer: '-', starter: '-', basic: '-', pro: 'Pi 5 (8GB)', unlimited: 'Server' },
 ];
 
 const faqItems = [
@@ -120,9 +151,8 @@ const faqItems = [
   },
 ];
 
-const PricingCard = ({ plan, includeHardware, onHardwareToggle, onBuy }) => {
-  const { name, price, description, features, popular, buttonText, buttonVariant } = plan;
-  const totalPrice = includeHardware ? price + 150 : price;
+const PricingCard = ({ plan, onBuy }) => {
+  const { name, price, alkPrice, description, features, popular, buttonText, buttonVariant, contactOnly, serverRequired, hardwareIncluded, hardwareInfo } = plan;
 
   return (
     <Card
@@ -131,126 +161,109 @@ const PricingCard = ({ plan, includeHardware, onHardwareToggle, onBuy }) => {
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
-        border: popular ? `2px solid ${colors.accent.primary}` : undefined,
-        transform: popular ? 'scale(1.05)' : 'none',
+        border: popular ? `2px solid ${colors.accent.primary}` : '1px solid rgba(255,255,255,0.1)',
+        transform: popular ? 'scale(1.02)' : 'none',
         zIndex: popular ? 1 : 0,
         backgroundColor: popular ? alpha(colors.accent.primary, 0.05) : colors.background.paper,
       }}
     >
       {popular && (
         <Chip
-          icon={<StarIcon sx={{ fontSize: 16 }} />}
-          label="MOST POPULAR"
+          icon={<StarIcon sx={{ fontSize: 14 }} />}
+          label="POPULAR"
           size="small"
           sx={{
             position: 'absolute',
-            top: -12,
+            top: -10,
             left: '50%',
             transform: 'translateX(-50%)',
             backgroundColor: colors.accent.primary,
             color: '#fff',
             fontWeight: 600,
-            fontSize: '0.7rem',
+            fontSize: '0.65rem',
           }}
         />
       )}
-      <CardContent sx={{ flexGrow: 1, p: 4 }}>
-        <Typography variant="h4" sx={{ mb: 1, color: colors.text.primary }}>
+      <CardContent sx={{ flexGrow: 1, p: 2.5 }}>
+        <Typography variant="h5" sx={{ mb: 0.5, color: colors.text.primary, fontWeight: 600 }}>
           {name}
         </Typography>
-        <Typography variant="body2" sx={{ mb: 3, color: colors.text.secondary }}>
+        <Typography variant="caption" sx={{ mb: 2, color: colors.text.secondary, display: 'block', minHeight: 32 }}>
           {description}
         </Typography>
-        <Box sx={{ mb: 2 }}>
+
+        <Box sx={{ mb: 1.5 }}>
           <Typography
             component="span"
-            sx={{ fontSize: '3rem', fontWeight: 700, color: colors.text.primary }}
+            sx={{ fontSize: '2rem', fontWeight: 700, color: colors.text.primary }}
           >
-            €{totalPrice}
+            €{price}
           </Typography>
           <Typography
             component="span"
-            sx={{ fontSize: '1rem', color: colors.text.secondary, ml: 1 }}
+            sx={{ fontSize: '0.85rem', color: colors.text.secondary, ml: 0.5 }}
           >
             /year
           </Typography>
         </Box>
 
-        {/* Hardware ID Protected Badge */}
-        <Chip
-          icon={<SecurityIcon sx={{ fontSize: 14 }} />}
-          label="Hardware ID Protected"
-          size="small"
-          sx={{
-            mb: 3,
-            backgroundColor: alpha(colors.trading.buy, 0.15),
-            color: colors.trading.buy,
-            fontWeight: 500,
-            fontSize: '0.7rem',
-          }}
-        />
+        {/* ALK Price */}
+        <Typography variant="caption" sx={{ color: colors.accent.primary, display: 'block', mb: 2 }}>
+          or {alkPrice?.toLocaleString()} ALK tokens
+        </Typography>
 
-        <Stack spacing={1.5} sx={{ mb: 3 }}>
+        {/* Hardware included badge */}
+        {hardwareIncluded && (
+          <Chip
+            icon={<MemoryIcon sx={{ fontSize: 12 }} />}
+            label={hardwareInfo}
+            size="small"
+            sx={{
+              mb: 2,
+              backgroundColor: alpha(colors.accent.secondary || '#9c27b0', 0.15),
+              color: colors.accent.secondary || '#9c27b0',
+              fontWeight: 500,
+              fontSize: '0.65rem',
+            }}
+          />
+        )}
+
+        {/* Server required badge */}
+        {serverRequired && (
+          <Chip
+            icon={<SecurityIcon sx={{ fontSize: 12 }} />}
+            label="Requires dedicated server"
+            size="small"
+            sx={{
+              mb: 2,
+              backgroundColor: alpha(colors.trading.sell, 0.15),
+              color: colors.trading.sell,
+              fontWeight: 500,
+              fontSize: '0.65rem',
+            }}
+          />
+        )}
+
+        <Stack spacing={1} sx={{ mb: 2 }}>
           {features.map((feature, index) => (
-            <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-              <CheckIcon sx={{ fontSize: 18, color: colors.trading.buy }} />
-              <Typography variant="body2" sx={{ color: colors.text.primary }}>
+            <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <CheckIcon sx={{ fontSize: 14, color: colors.trading.buy }} />
+              <Typography variant="caption" sx={{ color: colors.text.primary }}>
                 {feature}
               </Typography>
             </Box>
           ))}
         </Stack>
 
-        {/* Raspberry Pi Hardware Add-on */}
-        <Box
-          sx={{
-            p: 2,
-            mb: 3,
-            borderRadius: 1,
-            backgroundColor: alpha(colors.accent.secondary || '#9c27b0', 0.08),
-            border: `1px solid ${alpha(colors.accent.secondary || '#9c27b0', 0.3)}`,
-          }}
-        >
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={includeHardware}
-                onChange={onHardwareToggle}
-                sx={{
-                  color: colors.accent.secondary || '#9c27b0',
-                  '&.Mui-checked': {
-                    color: colors.accent.secondary || '#9c27b0',
-                  },
-                }}
-              />
-            }
-            label={
-              <Box>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <MemoryIcon sx={{ fontSize: 18, color: colors.accent.secondary || '#9c27b0' }} />
-                  <Typography variant="body2" sx={{ fontWeight: 600, color: colors.text.primary }}>
-                    +€150 - Raspberry Pi 4 Package
-                  </Typography>
-                </Box>
-                <Typography variant="caption" sx={{ color: colors.text.secondary, display: 'block', mt: 0.5 }}>
-                  Pre-configured, ready to trade
-                </Typography>
-              </Box>
-            }
-          />
-          <Typography variant="caption" sx={{ color: colors.text.muted, display: 'block', mt: 1, ml: 4 }}>
-            Includes: Pi 4 (4GB), case, power supply, 32GB SD card
-          </Typography>
-        </Box>
-
         <Button
           fullWidth
           variant={buttonVariant}
           color="primary"
-          size="large"
+          size="medium"
           onClick={onBuy}
           sx={{
-            py: 1.5,
+            py: 1,
+            fontSize: '0.875rem',
             ...(buttonVariant === 'contained' && {
               backgroundColor: colors.accent.primary,
               '&:hover': {
@@ -261,6 +274,12 @@ const PricingCard = ({ plan, includeHardware, onHardwareToggle, onBuy }) => {
         >
           {buttonText}
         </Button>
+
+        {contactOnly && (
+          <Typography variant="caption" sx={{ color: colors.text.muted, display: 'block', mt: 1, textAlign: 'center' }}>
+            Contact: info@alekosbot.com
+          </Typography>
+        )}
       </CardContent>
     </Card>
   );
@@ -283,35 +302,29 @@ const FeatureValue = ({ value }) => {
 
 // Map plan names to tier slugs
 const TIER_SLUGS = {
-  'Trader': 'trader',
-  'Pro Trader': 'pro',
-  'Enterprise': 'enterprise'
+  'Viewer': 'viewer',
+  'Starter': 'starter',
+  'Basic': 'basic',
+  'Pro': 'pro',
+  'Unlimited': 'unlimited'
 };
 
 const PricingPage = () => {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
-  const [hardwareSelections, setHardwareSelections] = useState({
-    Trader: false,
-    'Pro Trader': false,
-    Enterprise: false,
-  });
 
   const handleAccordionChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  const handleHardwareToggle = (planName) => () => {
-    setHardwareSelections((prev) => ({
-      ...prev,
-      [planName]: !prev[planName],
-    }));
-  };
-
   const handleBuy = (planName) => () => {
     const tier = TIER_SLUGS[planName];
-    const hardware = hardwareSelections[planName];
-    navigate(`/checkout?tier=${tier}&hardware=${hardware}`);
+    const plan = pricingPlans.find(p => p.name === planName);
+    if (plan?.contactOnly) {
+      window.location.href = 'mailto:info@alekosbot.com?subject=Unlimited Plan Inquiry';
+      return;
+    }
+    navigate(`/checkout?tier=${tier}`);
   };
 
   return (
@@ -354,13 +367,11 @@ const PricingPage = () => {
         </Box>
 
         {/* Pricing Cards */}
-        <Grid container spacing={3} sx={{ mb: 10 }} justifyContent="center" alignItems="stretch">
+        <Grid container spacing={2} sx={{ mb: 8 }} justifyContent="center" alignItems="stretch">
           {pricingPlans.map((plan) => (
-            <Grid item xs={12} md={4} key={plan.name}>
+            <Grid item xs={12} sm={6} md={2.4} key={plan.name}>
               <PricingCard
                 plan={plan}
-                includeHardware={hardwareSelections[plan.name]}
-                onHardwareToggle={handleHardwareToggle(plan.name)}
                 onBuy={handleBuy(plan.name)}
               />
             </Grid>
@@ -368,64 +379,62 @@ const PricingPage = () => {
         </Grid>
 
         {/* Feature Comparison Table */}
-        <Box sx={{ mb: 10 }}>
+        <Box sx={{ mb: 8 }}>
           <Typography
-            variant="h2"
-            sx={{ textAlign: 'center', mb: 4, color: colors.text.primary }}
+            variant="h4"
+            sx={{ textAlign: 'center', mb: 3, color: colors.text.primary }}
           >
             Feature Comparison
           </Typography>
           <TableContainer component={Paper} sx={{ backgroundColor: colors.background.paper }}>
-            <Table>
+            <Table size="small">
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ width: '40%' }}>Feature</TableCell>
-                  <TableCell align="center">Trader</TableCell>
-                  <TableCell align="center" sx={{ backgroundColor: alpha(colors.accent.primary, 0.1) }}>
-                    Pro Trader
-                  </TableCell>
-                  <TableCell align="center">Enterprise</TableCell>
+                  <TableCell sx={{ width: '25%', fontSize: '0.8rem' }}>Feature</TableCell>
+                  <TableCell align="center" sx={{ fontSize: '0.75rem' }}>Viewer</TableCell>
+                  <TableCell align="center" sx={{ fontSize: '0.75rem' }}>Starter</TableCell>
+                  <TableCell align="center" sx={{ fontSize: '0.75rem' }}>Basic</TableCell>
+                  <TableCell align="center" sx={{ backgroundColor: alpha(colors.accent.primary, 0.1), fontSize: '0.75rem' }}>Pro</TableCell>
+                  <TableCell align="center" sx={{ fontSize: '0.75rem' }}>Unlimited</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 <TableRow>
                   <TableCell>
-                    <Typography variant="body2" sx={{ color: colors.text.primary, fontWeight: 600 }}>
-                      Annual Price
+                    <Typography variant="caption" sx={{ color: colors.text.primary, fontWeight: 600 }}>
+                      Price
                     </Typography>
                   </TableCell>
                   <TableCell align="center">
-                    <Typography variant="body2" sx={{ fontWeight: 600, color: colors.text.primary }}>
-                      €180/year
-                    </Typography>
+                    <Typography variant="caption" sx={{ fontWeight: 600, color: colors.text.primary }}>€29</Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography variant="caption" sx={{ fontWeight: 600, color: colors.text.primary }}>€90</Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography variant="caption" sx={{ fontWeight: 600, color: colors.text.primary }}>€120</Typography>
                   </TableCell>
                   <TableCell align="center" sx={{ backgroundColor: alpha(colors.accent.primary, 0.05) }}>
-                    <Typography variant="body2" sx={{ fontWeight: 600, color: colors.accent.primary }}>
-                      €250/year
-                    </Typography>
+                    <Typography variant="caption" sx={{ fontWeight: 600, color: colors.accent.primary }}>€250</Typography>
                   </TableCell>
                   <TableCell align="center">
-                    <Typography variant="body2" sx={{ fontWeight: 600, color: colors.text.primary }}>
-                      €800/year
-                    </Typography>
+                    <Typography variant="caption" sx={{ fontWeight: 600, color: colors.text.primary }}>€400</Typography>
                   </TableCell>
                 </TableRow>
                 {featureComparison.map((row) => (
                   <TableRow key={row.feature}>
                     <TableCell>
-                      <Typography variant="body2" sx={{ color: colors.text.primary }}>
+                      <Typography variant="caption" sx={{ color: colors.text.primary }}>
                         {row.feature}
                       </Typography>
                     </TableCell>
-                    <TableCell align="center">
-                      <FeatureValue value={row.trader} />
-                    </TableCell>
+                    <TableCell align="center"><FeatureValue value={row.viewer} /></TableCell>
+                    <TableCell align="center"><FeatureValue value={row.starter} /></TableCell>
+                    <TableCell align="center"><FeatureValue value={row.basic} /></TableCell>
                     <TableCell align="center" sx={{ backgroundColor: alpha(colors.accent.primary, 0.05) }}>
-                      <FeatureValue value={row.proTrader} />
+                      <FeatureValue value={row.pro} />
                     </TableCell>
-                    <TableCell align="center">
-                      <FeatureValue value={row.enterprise} />
-                    </TableCell>
+                    <TableCell align="center"><FeatureValue value={row.unlimited} /></TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -433,52 +442,26 @@ const PricingPage = () => {
           </TableContainer>
         </Box>
 
-        {/* Raspberry Pi Hardware Package Section */}
+        {/* ALK Token Payment Info */}
         <Box
           sx={{
-            mb: 10,
-            p: 4,
+            mb: 6,
+            p: 3,
             borderRadius: 2,
-            backgroundColor: alpha(colors.accent.secondary || '#9c27b0', 0.08),
-            border: `1px solid ${alpha(colors.accent.secondary || '#9c27b0', 0.3)}`,
+            backgroundColor: alpha(colors.accent.primary, 0.08),
+            border: `1px solid ${alpha(colors.accent.primary, 0.3)}`,
+            textAlign: 'center',
           }}
         >
-          <Grid container spacing={4} alignItems="center">
-            <Grid item xs={12} md={6}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <MemoryIcon sx={{ fontSize: 40, color: colors.accent.secondary || '#9c27b0' }} />
-                <Typography variant="h3" sx={{ color: colors.text.primary }}>
-                  Dedicated Hardware Package
-                </Typography>
-              </Box>
-              <Typography variant="h4" sx={{ color: colors.accent.secondary || '#9c27b0', mb: 2 }}>
-                +€150
-              </Typography>
-              <Typography variant="body1" sx={{ color: colors.text.secondary, mb: 2 }}>
-                Purpose-built trading appliance. Low-power, 24/7 operation. Pre-configured for immediate deployment.
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h5" sx={{ color: colors.text.primary, mb: 2 }}>
-                Hardware Specifications:
-              </Typography>
-              <Stack spacing={1.5}>
-                {[
-                  'Raspberry Pi 4 (4GB RAM) - ARM Cortex-A72',
-                  'Industrial-grade aluminum enclosure',
-                  'Official 15W USB-C power supply',
-                  '32GB industrial SD card with pre-configured environment',
-                ].map((item, index) => (
-                  <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                    <CheckIcon sx={{ fontSize: 18, color: colors.trading.buy }} />
-                    <Typography variant="body2" sx={{ color: colors.text.primary }}>
-                      {item}
-                    </Typography>
-                  </Box>
-                ))}
-              </Stack>
-            </Grid>
-          </Grid>
+          <Typography variant="h5" sx={{ color: colors.text.primary, mb: 1 }}>
+            Pay with ALK Tokens
+          </Typography>
+          <Typography variant="body2" sx={{ color: colors.text.secondary, mb: 1 }}>
+            Use ALK tokens for discounted pricing. Available on Solana network.
+          </Typography>
+          <Typography variant="caption" sx={{ color: colors.accent.primary }}>
+            Token: FD2imiDmjYDrh4A66JWKLvrrSLXvZh5Jep1Kx67Z6WXu
+          </Typography>
         </Box>
 
         {/* FAQ Section */}
