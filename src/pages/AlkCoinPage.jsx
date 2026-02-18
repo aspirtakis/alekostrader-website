@@ -120,6 +120,56 @@ const roadmap = [
   { quarter: 'Q4 2026', items: ['Wormhole Bridge Integration', 'NFT Membership Passes', 'Full DAO Transition'], completed: false },
 ];
 
+// Price fetching hook
+const useAlkPrice = () => {
+  const [price, setPrice] = useState(null);
+  const [priceChange24h, setPriceChange24h] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPrice = async () => {
+      try {
+        // Jupiter Price API
+        const response = await fetch(
+          `https://api.jup.ag/price/v2?ids=${TOKEN_CONTRACT}`
+        );
+        const data = await response.json();
+
+        if (data.data && data.data[TOKEN_CONTRACT]) {
+          setPrice(data.data[TOKEN_CONTRACT].price);
+        }
+
+        // Try to get 24h change from Birdeye or DexScreener
+        try {
+          const dexResponse = await fetch(
+            `https://api.dexscreener.com/latest/dex/tokens/${TOKEN_CONTRACT}`
+          );
+          const dexData = await dexResponse.json();
+          if (dexData.pairs && dexData.pairs[0]) {
+            setPriceChange24h(parseFloat(dexData.pairs[0].priceChange?.h24 || 0));
+            // Use DexScreener price as fallback
+            if (!price) {
+              setPrice(parseFloat(dexData.pairs[0].priceUsd));
+            }
+          }
+        } catch (e) {
+          console.log('DexScreener fetch failed, using Jupiter only');
+        }
+      } catch (error) {
+        console.error('Price fetch error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPrice();
+    const interval = setInterval(fetchPrice, 30000); // Refresh every 30s
+    return () => clearInterval(interval);
+  }, []);
+
+  return { price, priceChange24h, loading };
+};
+
 // Hero Section
 const HeroSection = () => {
   const [copied, setCopied] = useState(false);
@@ -127,6 +177,7 @@ const HeroSection = () => {
   const [walletAddress, setWalletAddress] = useState('');
   const [alkBalance, setAlkBalance] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { price: alkPrice, priceChange24h, loading: priceLoading } = useAlkPrice();
 
   const handleCopy = () => {
     navigator.clipboard.writeText(TOKEN_CONTRACT);
@@ -304,6 +355,57 @@ const HeroSection = () => {
               >
                 The Native Utility Token of AlekosTrader
               </Typography>
+
+              {/* Live Price Display */}
+              <Paper
+                sx={{
+                  p: 2,
+                  mb: 3,
+                  bgcolor: alpha(solanaColors.green, 0.1),
+                  border: `1px solid ${alpha(solanaColors.green, 0.3)}`,
+                  borderRadius: 2,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 2,
+                }}
+              >
+                <Box>
+                  <Typography variant="caption" sx={{ color: colors.text.secondary }}>
+                    Live Price
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: 700,
+                      color: solanaColors.green,
+                      fontFamily: 'monospace',
+                    }}
+                  >
+                    {priceLoading ? (
+                      <CircularProgress size={20} sx={{ color: solanaColors.green }} />
+                    ) : alkPrice ? (
+                      `$${alkPrice < 0.01 ? alkPrice.toFixed(6) : alkPrice.toFixed(4)}`
+                    ) : (
+                      '---'
+                    )}
+                  </Typography>
+                </Box>
+                {priceChange24h !== null && !priceLoading && (
+                  <Chip
+                    icon={priceChange24h >= 0 ? <TrendingUpIcon /> : <TrendingUpIcon sx={{ transform: 'rotate(180deg)' }} />}
+                    label={`${priceChange24h >= 0 ? '+' : ''}${priceChange24h.toFixed(2)}%`}
+                    size="small"
+                    sx={{
+                      bgcolor: priceChange24h >= 0 ? alpha(solanaColors.green, 0.2) : alpha('#ff4444', 0.2),
+                      color: priceChange24h >= 0 ? solanaColors.green : '#ff4444',
+                      fontWeight: 600,
+                      '& .MuiChip-icon': {
+                        color: priceChange24h >= 0 ? solanaColors.green : '#ff4444',
+                      },
+                    }}
+                  />
+                )}
+              </Paper>
 
               <Typography
                 variant="h6"
