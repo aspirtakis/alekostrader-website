@@ -171,6 +171,56 @@ const useAlkPrice = () => {
   return { price, priceChange24h, loading };
 };
 
+// Pool stats fetching hook
+const usePoolStats = () => {
+  const [pools, setPools] = useState([]);
+  const [totalLiquidity, setTotalLiquidity] = useState(0);
+  const [totalVolume24h, setTotalVolume24h] = useState(0);
+  const [totalBuys24h, setTotalBuys24h] = useState(0);
+  const [totalSells24h, setTotalSells24h] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPoolStats = async () => {
+      try {
+        const response = await fetch(
+          `https://api.dexscreener.com/latest/dex/tokens/${TOKEN_CONTRACT}`
+        );
+        const data = await response.json();
+
+        if (data.pairs && data.pairs.length > 0) {
+          const poolData = data.pairs.map(p => ({
+            pair: `${p.baseToken.symbol}/${p.quoteToken.symbol}`,
+            dex: p.dexId,
+            liquidity: parseFloat(p.liquidity?.usd || 0),
+            volume24h: parseFloat(p.volume?.h24 || 0),
+            buys24h: p.txns?.h24?.buys || 0,
+            sells24h: p.txns?.h24?.sells || 0,
+            priceChange24h: parseFloat(p.priceChange?.h24 || 0),
+            address: p.pairAddress,
+          }));
+
+          setPools(poolData);
+          setTotalLiquidity(poolData.reduce((sum, p) => sum + p.liquidity, 0));
+          setTotalVolume24h(poolData.reduce((sum, p) => sum + p.volume24h, 0));
+          setTotalBuys24h(poolData.reduce((sum, p) => sum + p.buys24h, 0));
+          setTotalSells24h(poolData.reduce((sum, p) => sum + p.sells24h, 0));
+        }
+      } catch (error) {
+        console.error('Pool stats fetch error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPoolStats();
+    const interval = setInterval(fetchPoolStats, 30000); // Refresh every 30s
+    return () => clearInterval(interval);
+  }, []);
+
+  return { pools, totalLiquidity, totalVolume24h, totalBuys24h, totalSells24h, loading };
+};
+
 // Hero Section
 const HeroSection = () => {
   const [copied, setCopied] = useState(false);
@@ -688,6 +738,208 @@ const HeroSection = () => {
   );
 };
 
+// Pool Stats Section (Live from DexScreener)
+const PoolStatsSection = () => {
+  const { pools, totalLiquidity, totalVolume24h, totalBuys24h, totalSells24h, loading } = usePoolStats();
+
+  return (
+    <Box
+      sx={{
+        py: 8,
+        bgcolor: colors.background.primary,
+        borderBottom: `1px solid ${colors.border.default}`,
+      }}
+    >
+      <Container maxWidth="lg">
+        <Box sx={{ textAlign: 'center', mb: 6 }}>
+          <Typography
+            variant="overline"
+            sx={{
+              color: solanaColors.green,
+              fontWeight: 600,
+              letterSpacing: 2,
+              mb: 2,
+              display: 'block',
+            }}
+          >
+            LIVE POOL DATA
+          </Typography>
+          <Typography
+            variant="h2"
+            sx={{
+              fontSize: { xs: '2rem', md: '2.5rem' },
+              fontWeight: 700,
+              mb: 2,
+            }}
+          >
+            Liquidity Pools
+          </Typography>
+          <Typography variant="body1" sx={{ color: colors.text.secondary }}>
+            Real-time data from Raydium DEX pools. Updates every 30 seconds.
+          </Typography>
+        </Box>
+
+        {/* Summary Cards */}
+        <Grid container spacing={3} sx={{ mb: 6 }}>
+          {[
+            { label: 'Total Liquidity', value: `$${totalLiquidity.toFixed(2)}`, icon: '💧' },
+            { label: '24h Volume', value: `$${totalVolume24h.toFixed(2)}`, icon: '📊' },
+            { label: '24h Buys', value: totalBuys24h.toString(), icon: '🟢' },
+            { label: '24h Sells', value: totalSells24h.toString(), icon: '🔴' },
+          ].map((stat, index) => (
+            <Grid item xs={6} md={3} key={index}>
+              <Paper
+                sx={{
+                  p: 3,
+                  textAlign: 'center',
+                  bgcolor: alpha(colors.background.paper, 0.6),
+                  border: `1px solid ${colors.border.default}`,
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    transform: 'translateY(-4px)',
+                    borderColor: solanaColors.green,
+                  },
+                }}
+              >
+                <Typography variant="h4" sx={{ mb: 1 }}>{stat.icon}</Typography>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: 700,
+                    color: solanaColors.green,
+                    fontFamily: 'monospace',
+                  }}
+                >
+                  {loading ? <CircularProgress size={20} /> : stat.value}
+                </Typography>
+                <Typography variant="body2" sx={{ color: colors.text.secondary, mt: 1 }}>
+                  {stat.label}
+                </Typography>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
+
+        {/* Pool Details Table */}
+        <Paper
+          sx={{
+            overflow: 'hidden',
+            bgcolor: alpha(colors.background.paper, 0.6),
+            border: `1px solid ${colors.border.default}`,
+          }}
+        >
+          <Box sx={{ overflowX: 'auto' }}>
+            <Box
+              component="table"
+              sx={{
+                width: '100%',
+                borderCollapse: 'collapse',
+                '& th, & td': {
+                  p: 2,
+                  textAlign: 'left',
+                  borderBottom: `1px solid ${colors.border.default}`,
+                },
+                '& th': {
+                  bgcolor: alpha(solanaColors.purple, 0.1),
+                  fontWeight: 600,
+                  color: colors.text.primary,
+                },
+                '& td': {
+                  color: colors.text.secondary,
+                },
+                '& tr:hover td': {
+                  bgcolor: alpha(solanaColors.purple, 0.05),
+                },
+              }}
+            >
+              <thead>
+                <tr>
+                  <th>Pool</th>
+                  <th>DEX</th>
+                  <th>Liquidity</th>
+                  <th>24h Volume</th>
+                  <th>Buys</th>
+                  <th>Sells</th>
+                  <th>24h Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan={7} style={{ textAlign: 'center', padding: '2rem' }}>
+                      <CircularProgress size={30} sx={{ color: solanaColors.purple }} />
+                    </td>
+                  </tr>
+                ) : pools.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} style={{ textAlign: 'center' }}>No pools found</td>
+                  </tr>
+                ) : (
+                  pools.map((pool, index) => (
+                    <tr key={index}>
+                      <td style={{ fontWeight: 600, color: solanaColors.purple }}>{pool.pair}</td>
+                      <td>
+                        <Chip
+                          label={pool.dex}
+                          size="small"
+                          sx={{
+                            bgcolor: alpha(solanaColors.purple, 0.2),
+                            color: solanaColors.purple,
+                            textTransform: 'capitalize',
+                          }}
+                        />
+                      </td>
+                      <td style={{ fontFamily: 'monospace', color: solanaColors.green }}>
+                        ${pool.liquidity.toFixed(2)}
+                      </td>
+                      <td style={{ fontFamily: 'monospace' }}>${pool.volume24h.toFixed(2)}</td>
+                      <td style={{ color: '#4caf50' }}>{pool.buys24h}</td>
+                      <td style={{ color: '#f44336' }}>{pool.sells24h}</td>
+                      <td
+                        style={{
+                          fontWeight: 600,
+                          color: pool.priceChange24h >= 0 ? '#4caf50' : '#f44336',
+                        }}
+                      >
+                        {pool.priceChange24h >= 0 ? '+' : ''}{pool.priceChange24h.toFixed(2)}%
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </Box>
+          </Box>
+        </Paper>
+
+        {/* Trade Links */}
+        <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 4 }}>
+          <Button
+            variant="contained"
+            startIcon={<SwapIcon />}
+            onClick={() => window.open(RAYDIUM_SWAP_URL, '_blank')}
+            sx={{
+              background: `linear-gradient(135deg, ${solanaColors.purple} 0%, ${solanaColors.green} 100%)`,
+            }}
+          >
+            Trade on Raydium
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<OpenInNewIcon />}
+            onClick={() => window.open(`https://dexscreener.com/solana/${TOKEN_CONTRACT}`, '_blank')}
+            sx={{
+              borderColor: solanaColors.purple,
+              color: solanaColors.purple,
+            }}
+          >
+            View on DexScreener
+          </Button>
+        </Stack>
+      </Container>
+    </Box>
+  );
+};
+
 // Tokenomics Section
 const TokenomicsSection = () => {
   return (
@@ -1052,6 +1304,7 @@ const AlkCoinPage = () => {
   return (
     <Box sx={{ bgcolor: colors.background.primary, minHeight: '100vh' }}>
       <HeroSection />
+      <PoolStatsSection />
       <TokenomicsSection />
       <UtilitySection />
       <RoadmapSection />
