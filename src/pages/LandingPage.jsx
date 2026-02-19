@@ -261,7 +261,7 @@ const HeroSection = () => {
                 <Button
                   variant="contained"
                   size="large"
-                  onClick={() => navigate('/pricing')}
+                  onClick={() => navigate('/contact')}
                   endIcon={<ArrowIcon />}
                   sx={{
                     py: 1.5,
@@ -278,12 +278,15 @@ const HeroSection = () => {
                     transition: 'all 0.3s ease',
                   }}
                 >
-                  Start Trading Now
+                  Contact Us
                 </Button>
                 <Button
                   variant="outlined"
                   size="large"
-                  onClick={() => navigate('/features')}
+                  component="a"
+                  href="https://t.me/alekostrader"
+                  target="_blank"
+                  rel="noopener"
                   sx={{
                     py: 1.5,
                     px: 4,
@@ -299,7 +302,7 @@ const HeroSection = () => {
                     transition: 'all 0.3s ease',
                   }}
                 >
-                  Explore Platform
+                  Join Beta Group
                 </Button>
               </Stack>
               {/* Stats bar */}
@@ -913,7 +916,7 @@ const Footer = () => {
   const footerLinks = {
     Product: [
       { label: 'Features', path: '/features' },
-      { label: 'Pricing', path: '/pricing' },
+      { label: 'Contact', path: '/contact' },
       { label: 'Dashboard', path: '/login' },
       { label: '$ALK Token', path: '/alk' },
     ],
@@ -1102,7 +1105,7 @@ const LandingPage = () => {
       <FeaturesSection />
       <DeploymentSection />
       <HowItWorksSection />
-      <PricingPreviewSection />
+      {/* <PricingPreviewSection /> */}
       <DisclaimerSection />
       <Footer />
     </Box>

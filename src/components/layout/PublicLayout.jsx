@@ -20,7 +20,7 @@ const navItems = [
   { label: 'Features', path: '/features' },
   { label: 'Trade Like a Pro', path: '/trade-like-a-pro' },
   { label: 'Architecture', path: '/architecture' },
-  { label: 'Pricing', path: '/pricing' },
+  { label: 'Contact', path: '/contact' },
   { label: 'Docs', path: '/docs' },
 ];
 
@@ -66,7 +66,7 @@ const PublicLayout = () => {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Button
                 variant="contained"
-                onClick={() => navigate('/pricing')}
+                onClick={() => navigate('/contact')}
                 sx={{
                   background: `linear-gradient(135deg, ${colors.accent.primary} 0%, ${colors.accent.secondary} 100%)`,
                   textTransform: 'none',
@@ -77,7 +77,7 @@ const PublicLayout = () => {
                   },
                 }}
               >
-                Get AlekosTrader
+                Contact Us
               </Button>
             </Box>
           </Toolbar>
@@ -135,8 +135,8 @@ const PublicLayout = () => {
                   <Link href="/features" color="text.secondary" underline="hover" sx={{ fontSize: '0.875rem' }}>
                     Features
                   </Link>
-                  <Link href="/pricing" color="text.secondary" underline="hover" sx={{ fontSize: '0.875rem' }}>
-                    Pricing
+                  <Link href="/contact" color="text.secondary" underline="hover" sx={{ fontSize: '0.875rem' }}>
+                    Contact
                   </Link>
                   <Link href="/docs" color="text.secondary" underline="hover" sx={{ fontSize: '0.875rem' }}>
                     Documentation
