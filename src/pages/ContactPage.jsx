@@ -10,7 +10,6 @@ import {
 import { alpha } from '@mui/material/styles';
 import {
   Email as EmailIcon,
-  Telegram as TelegramIcon,
 } from '@mui/icons-material';
 import { colors } from '../theme/tradingTheme';
 
@@ -67,14 +66,14 @@ const ContactPage = () => {
               Email
             </Typography>
             <Link
-              href="mailto:contact@alekostrader.com"
+              href="mailto:info@alekosbot.com"
               sx={{ color: colors.accent.primary, fontSize: '1.1rem' }}
             >
-              contact@alekostrader.com
+              info@alekosbot.com
             </Link>
           </Paper>
 
-          <Paper
+          {/* <Paper
             sx={{
               p: 4,
               bgcolor: alpha(colors.background.paper, 0.6),
@@ -94,7 +93,7 @@ const ContactPage = () => {
             >
               @alekostrader
             </Link>
-          </Paper>
+          </Paper> */}
         </Stack>
       </Container>
     </Box>
