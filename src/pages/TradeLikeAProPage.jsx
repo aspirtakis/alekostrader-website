@@ -163,6 +163,48 @@ const TradeLikeAProPage = () => {
         </Container>
       </Box>
 
+      {/* Trading View Screenshot */}
+      <Container maxWidth="lg" sx={{ mt: -4, mb: 8 }}>
+        <Box
+          sx={{
+            position: 'relative',
+            borderRadius: 4,
+            overflow: 'hidden',
+            animation: `${glow} 3s ease-in-out infinite`,
+            border: `2px solid ${alpha('#00D4AA', 0.3)}`,
+          }}
+        >
+          <Box
+            component="img"
+            src="/screenshots/trading-view.png"
+            alt="AlekosTrader Trading View"
+            sx={{
+              width: '100%',
+              height: 'auto',
+              display: 'block',
+            }}
+          />
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              py: 2,
+              px: 3,
+              background: `linear-gradient(to top, ${alpha('#000', 0.9)}, transparent)`,
+            }}
+          >
+            <Typography variant="h6" sx={{ color: '#fff', fontWeight: 600 }}>
+              Professional Trading Interface
+            </Typography>
+            <Typography variant="body2" sx={{ color: alpha('#fff', 0.7) }}>
+              Real-time charts, order book, AI signals, and multi-pair watchlist — all in one view
+            </Typography>
+          </Box>
+        </Box>
+      </Container>
+
       {/* AI Analysis Screenshot Section */}
       <Container maxWidth="lg" sx={{ mt: -4 }}>
         <Box
@@ -176,8 +218,8 @@ const TradeLikeAProPage = () => {
         >
           <Box
             component="img"
-            src="/ai-analysis.png"
-            alt="AI Technical Analysis"
+            src="/screenshots/ai-analysis-detail.png"
+            alt="AI Technical Analysis - Trade Suggestions"
             sx={{
               width: '100%',
               height: 'auto',
@@ -199,10 +241,98 @@ const TradeLikeAProPage = () => {
               AI Technical Analysis
             </Typography>
             <Typography variant="body2" sx={{ color: alpha('#fff', 0.7) }}>
-              Real-time market assessment with actionable trade suggestions
+              Market assessment, trade suggestions with entry/SL/TP, probability scores, and key price levels — one click
             </Typography>
           </Box>
         </Box>
+      </Container>
+
+      {/* One-Click Indicators + AI Section */}
+      <Container maxWidth="lg" sx={{ mt: 10 }}>
+        <Grid container spacing={6} alignItems="center">
+          <Grid item xs={12} md={5}>
+            <Box
+              sx={{
+                borderRadius: 4,
+                overflow: 'hidden',
+                border: `2px solid ${alpha(colors.accent.secondary, 0.3)}`,
+                animation: `${float} 5s ease-in-out infinite`,
+                boxShadow: `0 20px 60px ${alpha('#000', 0.3)}`,
+              }}
+            >
+              <Box
+                component="img"
+                src="/screenshots/indicators-panel.png"
+                alt="Indicators Panel with AI Signal Summary"
+                sx={{
+                  width: '100%',
+                  height: 'auto',
+                  display: 'block',
+                }}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={7}>
+            <Typography
+              variant="overline"
+              sx={{
+                color: '#00D4AA',
+                fontWeight: 600,
+                letterSpacing: 2,
+              }}
+            >
+              ONE-CLICK ANALYSIS
+            </Typography>
+            <Typography
+              variant="h3"
+              sx={{
+                fontWeight: 700,
+                mb: 3,
+              }}
+            >
+              All Indicators Calculated at Once
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{
+                color: colors.text.secondary,
+                mb: 3,
+                lineHeight: 1.8,
+              }}
+            >
+              Hit one button and AlekosTrader calculates 20+ technical indicators simultaneously —
+              Bollinger Bands, ATR, Keltner, VWAP, ROC, Stochastic, MACD, and more. No switching between
+              charts or manual calculations.
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{
+                color: colors.text.secondary,
+                mb: 3,
+                lineHeight: 1.8,
+              }}
+            >
+              The AI then analyzes all indicator results together and generates a clear
+              <strong style={{ color: colors.trading.buy }}> Signal Summary</strong> — Bullish, Bearish, or Neutral —
+              with a confidence score. One click from raw data to actionable insight.
+            </Typography>
+            <Stack spacing={1.5}>
+              {[
+                '20+ indicators computed in parallel',
+                'AI-powered signal summary with confidence %',
+                'Bullish / Neutral / Bearish breakdown',
+                'One click to run full AI Analysis',
+              ].map((item, i) => (
+                <Stack key={i} direction="row" spacing={1} alignItems="center">
+                  <CheckIcon sx={{ fontSize: 20, color: '#00D4AA' }} />
+                  <Typography variant="body1" sx={{ color: colors.text.primary }}>
+                    {item}
+                  </Typography>
+                </Stack>
+              ))}
+            </Stack>
+          </Grid>
+        </Grid>
       </Container>
 
       {/* Features Grid */}

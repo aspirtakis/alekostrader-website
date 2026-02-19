@@ -18,6 +18,8 @@ import { colors } from '../../theme/tradingTheme';
 
 const navItems = [
   { label: 'Features', path: '/features' },
+  { label: 'Bots', path: '/bots' },
+  { label: 'Portfolio', path: '/portfolio' },
   { label: 'Trade Like a Pro', path: '/trade-like-a-pro' },
   { label: 'Architecture', path: '/architecture' },
   { label: 'Contact', path: '/contact' },

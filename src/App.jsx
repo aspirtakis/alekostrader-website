@@ -20,6 +20,8 @@ import AdminPage from './pages/AdminPage';
 import WhitepaperPage from './pages/WhitepaperPage';
 // import CheckoutPage from './pages/CheckoutPage';
 import ContactPage from './pages/ContactPage';
+import BotsPage from './pages/BotsPage';
+import PortfolioPage from './pages/PortfolioPage';
 
 function App() {
   return (
@@ -31,6 +33,8 @@ function App() {
             <Route element={<PublicLayout />}>
               <Route index element={<LandingPage />} />
               <Route path="/features" element={<FeaturesPage />} />
+              <Route path="/bots" element={<BotsPage />} />
+              <Route path="/portfolio" element={<PortfolioPage />} />
               {/* <Route path="/pricing" element={<PricingPage />} /> */}
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/docs" element={<DocsPage />} />
